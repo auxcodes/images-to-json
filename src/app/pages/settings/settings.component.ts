@@ -18,14 +18,13 @@ export class SettingsComponent implements OnInit {
 
   onFileSelected(event) {
     console.log('File selected: ', event.target.files);
-    const images: object[] = event.target.files;
-    this.fileList = images.map(image => {
-      console.log(image);
-      return image;
-    });
-
-    console.log("FileList: ", this.fileList);
+    const images = event.target.files;
+    for (var i = 0; i < images.length; i++) {
+        const image = images[i];
+        console.log(image);
+        this.fileList.push({ filename: image.name, path: "assets/images/", size: image.size, type: image.type });
+    }
+    console.log("FileList: ", JSON.stringify(this.fileList));
     this.fileService.openFile(event.target.files[0]);
-
   }
 }
