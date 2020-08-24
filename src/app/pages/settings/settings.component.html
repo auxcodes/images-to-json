@@ -1,1 +1,13 @@
 <input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple/>
+<div class="fields">
+    <ng-container id="defaultFields" class="row" *ngFor="let field of defaultFields; let i = index">
+        <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onSelection($event.target.id)" />
+        <span class="field">{{field?.name}}</span>
+        <span class="field">{{field?.content}}</span>
+    </ng-container>
+</div>
+<div class="output">
+    <ng-container *ngFor="let file of fileList; let i = index">
+        <span class="file">{{file?.values}}</span>
+    </ng-container>
+</div>
