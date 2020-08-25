@@ -26,38 +26,42 @@ export class SettingsComponent implements OnInit {
 
 
   onFileSelected(event) {
-    console.log('File selected: ', event.target.files);
-    const images = event.target.files;
+    const rawImages = event.target.files;
+    let images: FileDetail[] = [];
+    for (var i = 0; i < rawImages.length; i++) {
+      const image: FileDetail = { file: rawImages[i], values: "" };
+      images.push(image);
+    }
+    this.fileList = this.parseImages(images);
+  }
+
+  parseImages(images: FileDetail[]) {
+    let result: FileDetail[] = [];
     for (var i = 0; i < images.length; i++) {
-      const image: FileDetail = { file: images[i], values: "" };
+      const image: FileDetail = { file: images[i].file, values: "" };
       const jsonObj = this.parseSelectedDefaultFields(image.file);
       image.values = jsonObj;
-      console.log(image);
-      this.fileList.push(image);
+      result.push(image);
     }
-    console.log("FileList: ", JSON.stringify(this.fileList));
-    this.fileService.openFile(event.target.files[0]);
+    return result;
   }
 
   private parseSelectedDefaultFields(image): string {
-    console.log("image: ", image);
     let result = {};
     this.defaultFields.forEach(field => {
-      if (field.name === "name" && field.selected) {
-        result[field.name] = image.name.toString();
+      if (field.selected) {
+        result[field.name] = image[field.name];
       }
-      if (field.name === "size" && field.selected) {
-        result[field.name] = image.size;
-      }
-      if (field.name === "type" && field.selected) {
-        result[field.name] =  image.type.toString();
-      }
-      if (field.name === "lastModified" && field.selected) {
-        result[field.name] = image.lastModified;
-      }
-      console.log("loop: ", result);
     });
-    console.log(JSON.stringify(result));
     return JSON.stringify(result);
+  }
+
+  onSelection(fieldName) {
+    const index = this.defaultFields.findIndex(field => field.name === fieldName);
+    this.defaultFields[index].selected = !this.defaultFields[index].selected;
+
+    if (this.fileList.length > 0) {
+      this.fileList = this.parseImages(this.fileList);
+    }
   }
 }
