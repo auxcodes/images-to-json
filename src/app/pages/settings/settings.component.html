@@ -1,11 +1,40 @@
 <input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple/>
+<h3>Image File Fields</h3>
 <div class="fields">
+    <input class="title cb" type="checkbox" [checked]="allSelected" />
+    <span class="title title-text" >Field Name</span>
+    <span class="title title-text" >ID</span>
+    <span class="title title-text" >Value</span>
     <ng-container id="defaultFields" class="row" *ngFor="let field of defaultFields; let i = index">
         <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onSelection($event.target.id)" />
-        <span class="field">{{field?.name}}</span>
+        <span class="field">{{field?.text}}</span>
         <span class="field">{{field?.content}}</span>
+        <span class="field">{{field?.value}}</span>
     </ng-container>
 </div>
+<h3>Additional Fields</h3>
+<div class="fields">
+    <input class="title cb" type="checkbox" [checked]="allSelected" />
+    <span class="title title-text" >Field Name</span>
+    <span class="title title-text" >ID</span>
+    <span class="title title-text" >Value</span>
+    <ng-container id="extraFields" class="row" *ngFor="let field of extraFields; let i = index">
+        <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onSelection($event.target.id)" />
+        <span class="field">{{field?.text}}</span>
+        <span class="field">{{field?.content}}</span>
+        <input type="text" id="fieldValue" [value]="field?.value" class="field">
+    </ng-container>
+</div>
+<h3>Create Your Own Fields</h3>
+<div class="user-fields">
+    <form (ngSubmit)="addField($event)" #addFieldForm="ngForm">
+        <input type="text" id="name" placeholder="field name">
+        <input type="text" id="content" placeholder="field value">
+        <button type="submit">Add Field</button>
+    </form>
+
+</div>
+<h3>Output Preview</h3>
 <div class="output">
     <ng-container *ngFor="let file of fileList; let i = index">
         <span class="file">{{file?.values}}</span>

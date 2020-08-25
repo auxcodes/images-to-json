@@ -1,14 +1,25 @@
 .fields {
     display: grid;
-    grid-template-columns: min-content repeat(2, 1fr);
-    width: 500px;
-    margin: 0 auto;
+    grid-template-columns: min-content repeat(2, max-content) auto;
+    width: auto;
+    margin: 16px auto 16px 0;
+
+    .title {
+        border-bottom: 1px solid #666666;
+    }
+
+    .title-text {
+        margin: 2px;
+        text-align: center;
+    }
+
     .cb {
         margin: 5px 5px 0 0;
     }
+
     .field {
     //border-bottom: 1px solid #e1e1e1;
-    padding: 3px 10px;
+        padding: 3px 10px;
     }
 }
 

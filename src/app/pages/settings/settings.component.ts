@@ -14,12 +14,24 @@ export class SettingsComponent implements OnInit {
   constructor(private fileService: FileManagerService) { }
 
   defaultFields: JsonField[] = [
-    { name: "name", selected: true, content: "" },
-    { name: "size", selected: false, content: "" },
-    { name: "type", selected: false, content: "" },
-    { name: "lastModified", selected: false, content: "" }
+    { name: "name", text: "Name", selected: true, content: "$name", value: "file value" },
+    { name: "size", text: "Size", selected: false, content: "$size", value: "file value"},
+    { name: "type", text: "Type", selected: false, content: "$type", value: "file value"},
+    { name: "lastModified", text: "Last Modified", selected: false, content: "$lastModified",value: "file value" }
   ];
+
+  date: Date = new Date();
+  extraFields: JsonField[] = [
+    { name: "id", text: "File id", selected: false, content: "$id", value: 1 },
+    { name: "currentDate", text: "Current Date", selected: false, content: "$currentDate", value: this.date.getTime() },
+    { name: "fullpath", text: "Full Path", selected: false, content: "$fullpath", value: "https://fullpath.com/images/$name" },
+    { name: "relativePath", text: "Relative Path", selected: false, content: "$relativePath", value: "images/$name" },
+    { name: "thumbnail", text: "Thumbnail Path", selected: false, content: "$thumbnail", value: "images/thumbnail/$name" },
+  ];
+
+
   fileList: FileDetail[] = [];
+
 
   ngOnInit() {
   }
@@ -63,5 +75,14 @@ export class SettingsComponent implements OnInit {
     if (this.fileList.length > 0) {
       this.fileList = this.parseImages(this.fileList);
     }
+  }
+
+  addField(event) {
+    const name = event.target.name.value;
+    let content: string = event.target.content.value;
+    console.log(name);
+    console.log(content);
+    content = content.replace('$name', this.defaultFields.find(field => field.name === 'name').name);
+    console.log(content);
   }
 }
