@@ -6,7 +6,7 @@
     <span class="title title-text" >ID</span>
     <span class="title title-text" >Value</span>
     <ng-container id="defaultFields" class="row" *ngFor="let field of defaultFields; let i = index">
-        <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onSelection($event.target.id)" />
+        <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onDefaultSelection($event.target.id)" />
         <span class="field">{{field?.text}}</span>
         <span class="field">{{field?.content}}</span>
         <span class="field">{{field?.value}}</span>
@@ -19,10 +19,10 @@
     <span class="title title-text" >ID</span>
     <span class="title title-text" >Value</span>
     <ng-container id="extraFields" class="row" *ngFor="let field of extraFields; let i = index">
-        <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onSelection($event.target.id)" />
+        <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onExtraSelection($event.target.id)" />
         <span class="field">{{field?.text}}</span>
         <span class="field">{{field?.content}}</span>
-        <input type="text" id="fieldValue" [value]="field?.value" class="field">
+        <input type="text" id="fieldValue" [value]="field?.value" class="field" (change)="onExtraSelection($event.target)"/>
     </ng-container>
 </div>
 <h3>Create Your Own Fields</h3>
