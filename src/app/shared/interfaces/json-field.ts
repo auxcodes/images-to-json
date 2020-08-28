@@ -4,8 +4,8 @@ export interface JsonField {
     name: string;
     text: string;
     selected: boolean;
-    content: string;
-    type?: FieldType;
+    id: string;
+    type: FieldType;
     value?: any;
     error?: string;  
 }

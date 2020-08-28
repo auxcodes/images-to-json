@@ -1,35 +1,35 @@
-<input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple/>
+<input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple />
 <h3>Image File Fields</h3>
 <div class="fields">
     <input class="title cb" type="checkbox" />
-    <span class="title title-text" >Field Name</span>
-    <span class="title title-text" >ID</span>
-    <span class="title title-text" >Value</span>
+    <span class="title title-text">Field Name</span>
+    <span class="title title-text">Field Id</span>
+    <span class="title title-text">Value</span>
     <ng-container id="defaultFields" class="row" *ngFor="let field of defaultFields; let i = index">
         <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onDefaultSelection($event.target.id)" />
         <span class="field">{{field?.text}}</span>
-        <span class="field">{{field?.content}}</span>
+        <span class="field">{{field?.id}}</span>
         <span class="field">{{field?.value}}</span>
     </ng-container>
 </div>
 <h3>Additional Fields</h3>
 <div class="fields">
     <input class="title cb" type="checkbox" />
-    <span class="title title-text" >Field Name</span>
-    <span class="title title-text" >ID</span>
-    <span class="title title-text" >Value</span>
+    <span class="title title-text">Field Name</span>
+    <span class="title title-text">Field Id</span>
+    <span class="title title-text">Value</span>
     <ng-container id="extraFields" class="row" *ngFor="let field of extraFields; let i = index">
         <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onExtraSelection($event.target.id)" />
         <span class="field">{{field?.text}}</span>
-        <span class="field">{{field?.content}}</span>
-        <input type="text" id="fieldValue" [value]="field?.value" class="field" (change)="onExtraSelection($event.target)"/>
+        <span class="field">{{field?.id}}</span>
+        <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
     </ng-container>
 </div>
 <h3>Create Your Own Fields</h3>
 <div class="user-fields">
     <form (ngSubmit)="addField($event)" #addFieldForm="ngForm">
         <input type="text" id="name" placeholder="field name">
-        <input type="text" id="content" placeholder="field value">
+        <input type="text" id="id" placeholder="field value">
         <button type="submit">Add Field</button>
     </form>
 
@@ -37,6 +37,6 @@
 <h3>Output Preview</h3>
 <div class="output">
     <ng-container *ngFor="let file of fileList; let i = index">
-        <span class="file">{{file?.values}}</span>
+        <span class="file">{{file?.objects}}</span>
     </ng-container>
 </div>

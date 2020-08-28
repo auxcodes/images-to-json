@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FileManagerService } from 'src/app/services/file-manager.service';
 import { JsonField } from 'src/app/shared/interfaces/json-field';
 import { FileDetail } from 'src/app/shared/interfaces/file-detail';
-import { FileDetector } from 'protractor';
+import { FieldType } from '../../shared/enums/field-type.enum';
+import { ImagesService } from '../../services/images.service';
+import { FieldsService } from '../../services/fields.service';
 
 @Component({
   selector: 'app-settings',
@@ -11,79 +13,86 @@ import { FileDetector } from 'protractor';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private fileService: FileManagerService) { }
 
-  defaultFields: JsonField[] = [
-    { name: 'name', text: 'Name', selected: true, content: '$name', value: 'file value' },
-    { name: 'size', text: 'Size', selected: false, content: '$size', value: 'file value'},
-    { name: 'type', text: 'Type', selected: false, content: '$type', value: 'file value'},
-    { name: 'lastModified', text: 'Last Modified', selected: false, content: '$lastModified',value: 'file value' }
-  ];
-
-  date: Date = new Date();
-  extraFields: JsonField[] = [
-    { name: 'id', text: 'File id', selected: false, content: '$id', value: 1 },
-    { name: 'addDate', text: 'Add Date', selected: false, content: '$addDate', value: this.date.getTime() },
-    { name: 'fullpath', text: 'Full Path', selected: false, content: '$fullpath', value: 'https://fullpath.com/images/$name' },
-    { name: 'relativePath', text: 'Relative Path', selected: false, content: '$relativePath', value: 'images/$name' },
-    { name: 'thumbnail', text: 'Thumbnail Path', selected: false, content: '$thumbnail', value: 'images/thumbnail/$name' },
-  ];
-
+  defaultFields: JsonField[] = [];
+  extraFields: JsonField[] = [];
+  userFields: JsonField[] = [];
 
   fileList: FileDetail[] = [];
-  fileId: number = 1;
+  fileIdReference = 1;
 
-  ngOnInit() {
+  constructor(
+    private imageService: ImagesService,
+    private fieldService: FieldsService
+  ) {
+    fieldService.defaultFields.subscribe(fields => this.defaultFields = fields);
+    fieldService.extraFields.subscribe(fields => this.extraFields = fields);
+    fieldService.userFields.subscribe(fields => this.userFields = fields);
   }
 
+  ngOnInit() {
+    this.imageService.images.subscribe(files => {
+      this.fileList = files;
+    });
+  }
 
   onFileSelected(event) {
-    const rawImages = event.target.files;
-    let images: FileDetail[] = [];
-    for (var i = 0; i < rawImages.length; i++) {
-      const image: FileDetail = { file: rawImages[i], values: '' };
-      images.push(image);
-    }
-    this.fileList = this.parseImages(images);
+    this.imageService.updateImageList(event.target.files);
+
+    this.imageService.images.next(this.parseImages(this.fileList));
   }
 
   parseImages(images: FileDetail[]) {
-    let result: FileDetail[] = [];
-    for (var i = 0; i < images.length; i++) {
-      const image: FileDetail = { file: images[i].file, values: '' };
-      const jsonObj = this.parseFields(image.file);
-      image.values = jsonObj;
+    const result: FileDetail[] = [];
+    for (let i = 0; i < images.length; i++) {
+      const image: FileDetail = { file: images[i].file, objects: '', idValues: [] };
       result.push(image);
+      image.idValues = this.fieldService.updateFieldValues(image);
+      const jsonObj = this.parseFields(image.file);
+      image.objects = jsonObj;
+      result
     }
     return result;
   }
 
-  private parseFields(image): string{
-    let result = {
+  private parseFields(image): string {
+    const result = {
       ...this.parseDefaultFields(image),
-      ...this.parseExtraFields()
+      ...this.parseExtraFields(image)
     };
 
     return JSON.stringify(result);
   }
 
-  private parseDefaultFields(image): object {
-    let result = {};
+  private parseDefaultFields(image, selected?: boolean): object {
+    const result = {};
     this.defaultFields.forEach(field => {
-      if (field.selected) {
+      if (field.selected || selected) {
         result[field.name] = image[field.name];
       }
     });
     return result;
   }
 
-  private parseExtraFields(): object {
-    let result = {};
-    this.extraFields.find(field => field.name === 'id').value = (this.fileId++);
+  private parseExtraFields(image: FileDetail): object {
+    const result = {}; 
     this.extraFields.forEach(field => {
       if (field.selected) {
-        result[field.name] = field.value;
+        result[field.name] = this.fieldService.setExtraField(field, image, true);
       }
+    });
+    return result;
+  }
+
+  private getInputValue(content: string, image: FileDetail): string {
+    let result = content;
+    this.defaultFields.forEach(field => {
+      result = result.replace(field.id, image.idValues[field.id]);
+      console.log("forEach field: ", field, content.replace(field.id, image.idValues[field.id]));
+    });
+    this.extraFields.forEach(field => {
+      result = result.replace(field.id, image.idValues[field.id]);
+      console.log("forEach field: ", field, content.replace(field.id, image.idValues[field.id]));
     });
     return result;
   }
@@ -94,9 +103,17 @@ export class SettingsComponent implements OnInit {
   // }
 
   onFieldChange(field) {
+    console.log(field);
+
     switch (field.id) {
       case 'id': {
-        this.extraFields.find(field => field.name === 'id').value = ;
+        this.fileIdReference = field.value;
+        this.fieldService.fileIdCurrent = field.value;
+        this.extraFields.find(field => field.name === 'id').value = field.value;
+        console.log(field.value);
+        break;
+      }
+      default: {
         break;
       }
     }
@@ -108,8 +125,8 @@ export class SettingsComponent implements OnInit {
     this.defaultFields[index].selected = !this.defaultFields[index].selected;
 
     if (this.fileList.length > 0) {
-      this.fileList = this.parseImages(this.fileList);
       console.log("ExtraSelection: ",this.fileList);
+      this.fileList = this.parseImages(this.fileList);
     }
   }
 

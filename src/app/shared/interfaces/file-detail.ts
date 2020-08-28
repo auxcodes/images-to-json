@@ -1,4 +1,7 @@
+import { ImageFile } from './image-file';
+
 export interface FileDetail {
-    file: object;
-    values: string;
+  file: ImageFile;
+  objects: string;
+  idValues?: any[];
 }

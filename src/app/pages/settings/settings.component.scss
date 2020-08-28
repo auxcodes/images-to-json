@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: min-content repeat(2, max-content) auto;
     width: auto;
+    max-width: 700px;
     margin: 16px auto 16px 0;
 
     .title {
