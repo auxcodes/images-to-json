@@ -18,7 +18,7 @@ export class ImagesService {
     const rawImages = files;
     const images: FileDetail[] = [];
     for (let i = 0; i < rawImages.length; i++) {
-      const image: FileDetail = { file: rawImages[i], objects: '' };
+      const image: FileDetail = { file: rawImages[i], objects: '', idValues: [] };
       images.push(image);
     }
     this.images.next(images);

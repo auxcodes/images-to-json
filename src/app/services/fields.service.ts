@@ -5,6 +5,7 @@ import { ImagesService } from './images.service';
 import { BehaviorSubject } from 'rxjs';
 import { ImageFile } from '../shared/interfaces/image-file';
 import { FileDetail } from '../shared/interfaces/file-detail';
+import { FieldValue } from '../shared/interfaces/field-value';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { FileDetail } from '../shared/interfaces/file-detail';
 export class FieldsService {
 
   date: Date = new Date();
+  fileIdReference = 1;
   fileIdCurrent = 1;
 
   defaultFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([
@@ -30,62 +32,150 @@ export class FieldsService {
   ]);
 
   userFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
+  tempFieldValues: object = {};
 
   constructor(private imageService: ImagesService) { }
 
-  updateFieldValues(image: FileDetail): string[] {
-    let result: string[] = [];
-    result = this.defaultFieldValues(image);
-    result = result.concat(this.extraFieldValues(image))
+  updateIdReference(value: number) {
+    this.fileIdReference = value;
+    this.fileIdCurrent = value;
+    this.updateExtraFieldValue('id', value);
+  };
+
+  resetIdCount() {
+    this.fileIdCurrent = this.fileIdReference -1;
+  }
+
+  updateIdValues(images: FileDetail[]): FileDetail[] {
+    const result: FileDetail[] = images;
+    this.resetIdCount();
+    result.forEach(image => {
+      this.fileIdCurrent++;
+      const idValues = {
+        ...this.defaultIdValues(image),
+        ...this.extraIdValues(image)
+      }
+      image.idValues = idValues;
+    });
+
     return result;
   }
 
-  private defaultFieldValues(image: FileDetail): string[] {
-    const result: string[] = [];
+  updateExtraFieldValue(fieldName: string, value) {
+    this.extraFields.value.find(field => field.name === fieldName).value = value;
+    this.extraFields.next(this.extraFields.value);
+  }
+
+  private defaultIdValues(image: FileDetail): object {
+    const result = {};
+    this.tempFieldValues = [];
     this.defaultFields.value.forEach(field => {
-      result[field.id] = image.file[field.name];
+        result[field.id] = image.file[field.name];
+        this.tempFieldValues[field.id] = image.file[field.name];
     });
     return result;
   }
 
-  private extraFieldValues(image: FileDetail): string[] {
-    const result: string[] = [];
+  private extraIdValues(image: FileDetail): object {
+    const result = {};
     this.extraFields.value.forEach(field => {
-      result[field.id] = image[field.name];
-      //this.setExtraField(field, image, false);
-      // set all values and then use them as reference, requires seperate function
+        result[field.id] = image[field.name];
+        this.tempFieldValues[field.id] = image.file[field.name];
+        result[field.id] = this.getIdValues(field, image);
     });
     return result;
   }
 
-  setExtraField(field, image: FileDetail, increment: boolean) {
+  private getIdValues(field, image: FileDetail): string {
     let result;
-    console.log("Set extra field", field, image);
     switch (field.name) {
       case 'id': {
-        if (increment) {
-            this.extraFields.value.find(field => field.name === 'id').value = (this.fileIdCurrent++);
-        }
-        result = field.value;
+        result = this.fileIdCurrent;
         break;
       }
       case 'addDate': {
-        console.log(field.value);
         result = field.value;
         break;
       }
       case 'fullpath': {
-        console.log(field.value);
         result = this.getInputValue(field.value, image);
         break;
       }
       case 'relativePath': {
-        console.log(field.value);
         result = this.getInputValue(field.value, image);
         break;
       }
       case 'thumbnail': {
-        console.log(field.value);
+        result = this.getInputValue(field.value, image);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return result;
+  }
+
+  parseSelectedFields(images: FileDetail[]): FileDetail[] {
+    const result: FileDetail[] = images;
+    this.resetIdCount();
+    result.forEach(fileDetail => {
+      this.fileIdCurrent++;
+      const jsonObj = this.parseFields(fileDetail);
+      fileDetail.objects = jsonObj;
+    });
+    return result;
+  }
+
+  private parseFields(image: FileDetail): string {
+    const result = {
+      ...this.parseDefaultFields(image),
+      ...this.parseExtraFields(image)
+    };
+
+    return JSON.stringify(result);
+  }
+
+  private parseDefaultFields(image: FileDetail): object {
+    const result = {};
+    this.defaultFields.value.forEach(field => {
+      if (field.selected) {
+        result[field.name] = image.file[field.name];
+      }
+    });
+    return result;
+  }
+
+  private parseExtraFields(image: FileDetail): object {
+    const result = {};
+    this.extraFields.value.forEach(field => {
+      if (field.selected) {
+        result[field.name] = this.setExtraField(field, image);
+      }
+    });
+    return result;
+  }
+
+  setExtraField(field, image: FileDetail) {
+    let result;
+    switch (field.name) {
+      case 'id': {
+        result = this.fileIdCurrent;
+        break;
+      }
+      case 'addDate': {
+        result = field.value;
+        break;
+      }
+      case 'fullpath': {
+        result = this.getInputValue(field.value, image);
+        break;
+      }
+      case 'relativePath': {
+        result = this.getInputValue(field.value, image);
+        break;
+      }
+      case 'thumbnail': {
         result = this.getInputValue(field.value, image);
         break;
       }
@@ -99,12 +189,12 @@ export class FieldsService {
   private getInputValue(content: string, image: FileDetail): string {
     let result = content;
     this.defaultFields.value.forEach(field => {
-      result = result.replace(field.id, image.idValues[field.id]);
-      console.log("forEach field: ", field, content.replace(field.id, image.idValues[field.id]));
+      const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
+      result = result.replace(field.id, value);
     });
     this.extraFields.value.forEach(field => {
-      result = result.replace(field.id, image.idValues[field.id]);
-      console.log("forEach field: ", field, content.replace(field.id, image.idValues[field.id]));
+      const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
+      result = result.replace(field.id, value);
     });
     return result;
   }
