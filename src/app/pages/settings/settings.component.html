@@ -1,7 +1,7 @@
 <input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple />
 <h3>Image File Fields</h3>
 <div class="fields">
-    <input class="title cb" type="checkbox" />
+    <input class="title cb" type="checkbox" [checked]="allSelectedDefault" (change)="onSelectAllDefault($event.target.checked)"/>
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>
     <span class="title title-text">Value</span>
@@ -14,7 +14,7 @@
 </div>
 <h3>Additional Fields</h3>
 <div class="fields">
-    <input class="title cb" type="checkbox" />
+    <input class="title cb" type="checkbox" [checked]="allSelectedExtra" (change)="onSelectAllExtra($event.target.checked)"/>
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>
     <span class="title title-text">Value</span>

@@ -20,6 +20,10 @@ export class SettingsComponent implements OnInit {
 
   fileList: FileDetail[] = [];
 
+  allSelectedDefault = false;
+  allSelectedExtra = false;
+
+
   constructor(
     private imageService: ImagesService,
     private fieldService: FieldsService
@@ -61,7 +65,6 @@ export class SettingsComponent implements OnInit {
         break;
       }
     }
-
   }
 
   onDefaultSelection(fieldName) {
@@ -76,6 +79,24 @@ export class SettingsComponent implements OnInit {
   onExtraSelection(fieldName) {
     const index = this.extraFields.findIndex(field => field.name === fieldName);
     this.extraFields[index].selected = !this.extraFields[index].selected;
+
+    if (this.fileList.length > 0) {
+      this.fileList = this.parseImages(this.fileList);
+    }
+  }
+
+  onSelectAllDefault(checked) {
+    this.allSelectedDefault = checked;
+    this.defaultFields.forEach(sid => sid.selected = checked);
+
+    if (this.fileList.length > 0) {
+      this.fileList = this.parseImages(this.fileList);
+    }
+  }
+
+  onSelectAllExtra(checked) {
+    this.allSelectedExtra = checked;
+    this.extraFields.forEach(sid => sid.selected = checked);
 
     if (this.fileList.length > 0) {
       this.fileList = this.parseImages(this.fileList);
