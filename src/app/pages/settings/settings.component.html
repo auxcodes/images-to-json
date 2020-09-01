@@ -1,7 +1,7 @@
 <input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple />
 <h3>Image File Fields</h3>
 <div class="fields">
-    <input class="title cb" type="checkbox" [checked]="allSelectedDefault" (change)="onSelectAllDefault($event.target.checked)"/>
+    <input class="title cb" type="checkbox" id="defaultSelectAll" [checked]="allSelectedDefault" (change)="onSelectAll($event.target)"/>
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>
     <span class="title title-text">Value</span>
@@ -14,7 +14,7 @@
 </div>
 <h3>Additional Fields</h3>
 <div class="fields">
-    <input class="title cb" type="checkbox" [checked]="allSelectedExtra" (change)="onSelectAllExtra($event.target.checked)"/>
+    <input class="title cb" type="checkbox" id="extraSelectAll" [checked]="allSelectedExtra" (change)="onSelectAll($event.target)"/>
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>
     <span class="title title-text">Value</span>
@@ -32,7 +32,18 @@
         <input type="text" id="id" placeholder="field value">
         <button type="submit">Add Field</button>
     </form>
-
+</div>
+<div class="fields" *ngIf="userFields.length > 0">
+    <input class="title cb" type="checkbox" id="userSelectAll" [checked]="allSelectedUser" (change)="onSelectAll($event.target)" />
+    <span class="title title-text">Field Name</span>
+    <span class="title title-text">Field Id</span>
+    <span class="title title-text">Value</span>
+    <ng-container id="userFields" class="row" *ngFor="let field of userFields; let i = index">
+        <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onUserSelection($event.target.id)" />
+        <span class="field">{{field?.text}}</span>
+        <span class="field">{{field?.id}}</span>
+        <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
+    </ng-container>
 </div>
 <h3>Output Preview</h3>
 <div class="output">

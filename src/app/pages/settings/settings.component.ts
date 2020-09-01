@@ -22,7 +22,7 @@ export class SettingsComponent implements OnInit {
 
   allSelectedDefault = false;
   allSelectedExtra = false;
-
+  allSelectedUser = false;
 
   constructor(
     private imageService: ImagesService,
@@ -85,18 +85,33 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  onSelectAllDefault(checked) {
-    this.allSelectedDefault = checked;
-    this.defaultFields.forEach(sid => sid.selected = checked);
+  onUserSelection(fieldName) {
+    const index = this.userFields.findIndex(field => field.name === fieldName);
+    this.userFields[index].selected = !this.userFields[index].selected;
 
     if (this.fileList.length > 0) {
       this.fileList = this.parseImages(this.fileList);
     }
   }
 
-  onSelectAllExtra(checked) {
-    this.allSelectedExtra = checked;
-    this.extraFields.forEach(sid => sid.selected = checked);
+  onSelectAll(checkBox) {
+    switch (checkBox.id) {
+      case "defaultSelectAll": {
+        this.allSelectedDefault = checkBox.checked;
+        this.defaultFields.forEach(sid => sid.selected = checkBox.checked);
+        break;
+      }
+      case "extraSelectAll": {
+        this.allSelectedExtra = checkBox.checked;
+        this.extraFields.forEach(sid => sid.selected = checkBox.checked);
+        break;
+      }
+      case "userSelectAll": {
+        this.allSelectedUser = checkBox.checked;
+        this.userFields.forEach(sid => sid.selected = checkBox.checked);
+        break;
+      }
+    }
 
     if (this.fileList.length > 0) {
       this.fileList = this.parseImages(this.fileList);
@@ -104,11 +119,21 @@ export class SettingsComponent implements OnInit {
   }
 
   addField(event) {
-    const name = event.target.name.value;
-    let content: string = event.target.content.value;
-    console.log(name);
-    console.log(content);
-    content = content.replace('$name', this.defaultFields.find(field => field.name === 'name').name);
-    console.log(content);
+    const name: string = event.target[0].value;
+    const value: string = event.target[1].value;
+
+    if (!this.defaultFields.find(field => field.name === name) && !this.extraFields.find(field => field.name === name) && !this.userFields.find(field => field.name === name)) {
+      this.userFields.push({ name: name, value: value, selected: true, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) });
+      this.fieldService.userFields.next(this.userFields);
+    }
+    else {
+      alert('Field with that name already exists!');
+    }
+  }
+
+  fieldNameToText(fieldName: string): string {
+    const spacedText = fieldName.replace(/([A-Z])/g, " $1");
+    const result = spacedText.charAt(0).toUpperCase() + spacedText.slice(1);
+    return result;
   }
 }
