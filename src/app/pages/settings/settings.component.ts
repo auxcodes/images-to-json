@@ -119,12 +119,16 @@ export class SettingsComponent implements OnInit {
   }
 
   addField(event) {
-    const name: string = event.target[0].value;
-    const value: string = event.target[1].value;
+    const selected: boolean = event.target[0].checked;
+    const name: string = event.target[1].value;
+    const value: string = event.target[2].value;
 
     if (!this.defaultFields.find(field => field.name === name) && !this.extraFields.find(field => field.name === name) && !this.userFields.find(field => field.name === name)) {
-      this.userFields.push({ name: name, value: value, selected: true, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) });
+      this.userFields.push({ name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) });
       this.fieldService.userFields.next(this.userFields);
+      if (this.fileList.length > 0) {
+        this.fileList = this.parseImages(this.fileList);
+      }
     }
     else {
       alert('Field with that name already exists!');

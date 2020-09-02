@@ -130,7 +130,8 @@ export class FieldsService {
   private parseFields(image: FileDetail): string {
     const result = {
       ...this.parseDefaultFields(image),
-      ...this.parseExtraFields(image)
+      ...this.parseExtraFields(image),
+      ...this.parseUserFields(image)
     };
 
     return JSON.stringify(result);
@@ -156,7 +157,17 @@ export class FieldsService {
     return result;
   }
 
-  setExtraField(field, image: FileDetail) {
+  private parseUserFields(image: FileDetail): object {
+    const result = {};
+    this.userFields.value.forEach(field => {
+      if (field.selected) {
+        result[field.name] = this.getInputValue(field.value, image);
+      }
+    });
+    return result;
+  }
+
+  private setExtraField(field, image: FileDetail) {
     let result;
     switch (field.name) {
       case 'id': {
@@ -193,6 +204,10 @@ export class FieldsService {
       result = result.replace(field.id, value);
     });
     this.extraFields.value.forEach(field => {
+      const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
+      result = result.replace(field.id, value);
+    });
+    this.userFields.value.forEach(field => {
       const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
       result = result.replace(field.id, value);
     });
