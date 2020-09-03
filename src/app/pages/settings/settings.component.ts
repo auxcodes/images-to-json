@@ -122,8 +122,12 @@ export class SettingsComponent implements OnInit {
     const selected: boolean = event.target[0].checked;
     const name: string = event.target[1].value;
     const value: string = event.target[2].value;
-
-    if (!this.defaultFields.find(field => field.name === name) && !this.extraFields.find(field => field.name === name) && !this.userFields.find(field => field.name === name)) {
+    const validName = this.checkValueForExistingName(name);
+    let validId = true;
+    if (value.includes('$')) {
+      validId = this.checkValueForId(value);
+    }
+    if (validName && validId) {
       this.userFields.push({ name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) });
       this.fieldService.userFields.next(this.userFields);
       if (this.fileList.length > 0) {
@@ -131,8 +135,41 @@ export class SettingsComponent implements OnInit {
       }
     }
     else {
-      alert('Field with that name already exists!');
+      let alertString = '';
+      if (!validName) {
+        alertString = 'Field with that name already exists!\n\n'
+      }
+      if (!validId) {
+        alertString = alertString + 'Field with that Id does NOT exist!'
+      }
+      alert(alertString);
     }
+  }
+
+  private checkValueForExistingName(fieldName: string): boolean {
+    return !this.defaultFields.find(field => field.name === fieldName) &&
+      !this.extraFields.find(field => field.name === fieldName) &&
+      !this.userFields.find(field => field.name === fieldName)
+  }
+
+  private checkValueForId(fieldValue: string): boolean {
+    this.defaultFields.some(field => {
+      if (fieldValue.includes(field.id)) {
+        return true;
+      }
+    });
+    this.extraFields.some(field => {
+      if (fieldValue.includes(field.id)) {
+        return true;
+      }
+    });
+    this.userFields.some(field => {
+      if (fieldValue.includes(field.id)) {
+        return true;
+      }
+    });
+
+    return false;
   }
 
   fieldNameToText(fieldName: string): string {

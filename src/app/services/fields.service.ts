@@ -43,7 +43,7 @@ export class FieldsService {
   };
 
   resetIdCount() {
-    this.fileIdCurrent = this.fileIdReference -1;
+    this.fileIdCurrent = this.fileIdReference - 1;
   }
 
   updateIdValues(images: FileDetail[]): FileDetail[] {
@@ -53,7 +53,8 @@ export class FieldsService {
       this.fileIdCurrent++;
       const idValues = {
         ...this.defaultIdValues(image),
-        ...this.extraIdValues(image)
+        ...this.extraIdValues(image),
+        ...this.userIdValues(image)
       }
       image.idValues = idValues;
     });
@@ -68,10 +69,10 @@ export class FieldsService {
 
   private defaultIdValues(image: FileDetail): object {
     const result = {};
-    this.tempFieldValues = [];
+    this.tempFieldValues = {};
     this.defaultFields.value.forEach(field => {
-        result[field.id] = image.file[field.name];
-        this.tempFieldValues[field.id] = image.file[field.name];
+      result[field.id] = image.file[field.name];
+      this.tempFieldValues[field.id] = image.file[field.name];
     });
     return result;
   }
@@ -79,9 +80,19 @@ export class FieldsService {
   private extraIdValues(image: FileDetail): object {
     const result = {};
     this.extraFields.value.forEach(field => {
-        result[field.id] = image[field.name];
-        this.tempFieldValues[field.id] = image.file[field.name];
-        result[field.id] = this.getIdValues(field, image);
+      result[field.id] = image[field.name];
+      this.tempFieldValues[field.id] = this.getIdValues(field, image);
+      result[field.id] = this.getIdValues(field, image);
+    });
+    return result;
+  }
+
+  private userIdValues(image: FileDetail): object {
+    const result = {};
+    this.userFields.value.forEach(field => {
+      result[field.id] = image[field.name];
+      this.tempFieldValues[field.id] = this.getIdValues(field, image);
+      result[field.id] = this.getInputValue(field.value, image);
     });
     return result;
   }
@@ -199,18 +210,20 @@ export class FieldsService {
 
   private getInputValue(content: string, image: FileDetail): string {
     let result = content;
-    this.defaultFields.value.forEach(field => {
-      const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
-      result = result.replace(field.id, value);
-    });
-    this.extraFields.value.forEach(field => {
-      const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
-      result = result.replace(field.id, value);
-    });
-    this.userFields.value.forEach(field => {
-      const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
-      result = result.replace(field.id, value);
-    });
+    if (content.includes('$')) {
+      this.defaultFields.value.forEach(field => {
+        const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
+        result = result.replace(field.id, value);
+      });
+      this.extraFields.value.forEach(field => {
+        const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
+        result = result.replace(field.id, value);
+      });
+      this.userFields.value.forEach(field => {
+        const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
+        result = result.replace(field.id, value);
+      });
+    }
     return result;
   }
 }

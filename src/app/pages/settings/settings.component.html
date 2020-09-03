@@ -28,7 +28,7 @@
 <h3>Create Your Own Fields</h3>
 <div class="user-fields">
     <form (ngSubmit)="addField($event)" id="search" #addFieldForm="ngForm">
-        <input class="field cb" type="checkbox" id="selected"/>
+        <input class="field cb" type="checkbox" checked="checked" id="selected"/>
         <input type="text" id="name" placeholder="field name"/>
         <input type="text" id="id" placeholder="field value"/>
         <button type="submit">Add Field</button>
