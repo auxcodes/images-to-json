@@ -153,23 +153,30 @@ export class SettingsComponent implements OnInit {
   }
 
   private checkValueForId(fieldValue: string): boolean {
-    this.defaultFields.some(field => {
+    let result = false;
+    result = this.defaultFields.some(field => {
       if (fieldValue.includes(field.id)) {
+        console.log("includes:", field.id);
         return true;
       }
     });
-    this.extraFields.some(field => {
-      if (fieldValue.includes(field.id)) {
-        return true;
-      }
-    });
-    this.userFields.some(field => {
-      if (fieldValue.includes(field.id)) {
-        return true;
-      }
-    });
-
-    return false;
+    if (!result) {
+      result = this.extraFields.some(field => {
+        if (fieldValue.includes(field.id)) {
+          console.log("includes:", field.id);
+          return true;
+        }
+      });
+    }
+    if (!result) {
+      result = this.userFields.some(field => {
+        if (fieldValue.includes(field.id)) {
+          console.log("includes:", field.id);
+          return true;
+        }
+      });
+    }
+    return result;
   }
 
   fieldNameToText(fieldName: string): string {
