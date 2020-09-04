@@ -123,10 +123,11 @@ export class SettingsComponent implements OnInit {
     const name: string = event.target[1].value;
     const value: string = event.target[2].value;
     const validName = this.checkValueForExistingName(name);
-    let validId = true;
-    if (value.includes('$')) {
-      validId = this.checkValueForId(value);
-    }
+    const idCount = this.valueIdCount(value);
+    const validIds = this.validId(value, idCount);
+    console.log(idCount, validIds);
+    const validId = idCount === validIds.length;
+
     if (validName && validId) {
       this.userFields.push({ name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) });
       this.fieldService.userFields.next(this.userFields);
@@ -137,10 +138,11 @@ export class SettingsComponent implements OnInit {
     else {
       let alertString = '';
       if (!validName) {
-        alertString = 'Field with that name already exists!\n\n'
+        alertString = 'Field with that name already exists!\n\n';
       }
       if (!validId) {
-        alertString = alertString + 'Field with that Id does NOT exist!'
+        alertString = alertString + 'An id used in the field value does NOT exist!\n';
+        alertString = validIds.length > 0 ? alertString + 'Valid ids found: \n\n' + validIds.toString() : alertString;
       }
       alert(alertString);
     }
@@ -152,32 +154,46 @@ export class SettingsComponent implements OnInit {
       !this.userFields.find(field => field.name === fieldName)
   }
 
-  private checkValueForId(fieldValue: string): boolean {
-    let result = false;
+  private valueIdCount(fieldValue: string): number {
+    let idCount = 0;
+    for (let i = 0; i < fieldValue.length; i++) {
+      if (fieldValue[i] === '$') {
+        idCount++;
+      }
+    }
+    console.log(idCount);
+    return idCount;
+  }
 
-    result = this.defaultFields.some(field => {
+  private validId(fieldValue: string, idCount) {
+
+    const foundIds: string[] = [];
+
+    this.defaultFields.forEach(field => {
       if (fieldValue.includes(field.id)) {
         console.log("includes:", field.id);
-        return true;
+        foundIds.push(field.id);
+        idCount--;
       }
     });
-    if (!result) {
-      result = this.extraFields.some(field => {
+    if (idCount > 0) {
+      this.extraFields.forEach(field => {
         if (fieldValue.includes(field.id)) {
           console.log("includes:", field.id);
-          return true;
+          foundIds.push(field.id);
+          idCount--;
         }
       });
     }
-    if (!result) {
-      result = this.userFields.some(field => {
+    if (idCount > 0) {
+      this.userFields.forEach(field => {
         if (fieldValue.includes(field.id)) {
           console.log("includes:", field.id);
-          return true;
+          foundIds.push(field.id);
         }
       });
     }
-    return result;
+    return foundIds;
   }
 
   fieldNameToText(fieldName: string): string {
