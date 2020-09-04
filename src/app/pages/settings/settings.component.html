@@ -34,16 +34,18 @@
         <button type="submit">Add Field</button>
     </form>
 </div>
-<div class="fields" *ngIf="userFields.length > 0">
+<div class="fields deletable" *ngIf="userFields.length > 0">
     <input class="title cb" type="checkbox" id="userSelectAll" [checked]="allSelectedUser" (change)="onSelectAll($event.target)" />
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>
     <span class="title title-text">Value</span>
+    <span class="title title-text delete-icon">X</span>
     <ng-container id="userFields" class="row" *ngFor="let field of userFields; let i = index">
         <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onUserSelection($event.target.id)" />
         <span class="field">{{field?.text}}</span>
         <span class="field">{{field?.id}}</span>
         <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
+        <button class="delete-btn" (click)="deleteField(i)">X</button>
     </ng-container>
 </div>
 <h3>Output Preview</h3>

@@ -23,6 +23,17 @@
     }
 }
 
+.deletable {
+  grid-template-columns: min-content repeat(2, max-content) auto min-content;
+
+  .delete-icon {
+
+  }
+
+  .delete-btn {
+  }
+}
+
 .output {
     display: flex;
     flex-direction: column;

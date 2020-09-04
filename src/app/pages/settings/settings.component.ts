@@ -154,6 +154,7 @@ export class SettingsComponent implements OnInit {
 
   private checkValueForId(fieldValue: string): boolean {
     let result = false;
+
     result = this.defaultFields.some(field => {
       if (fieldValue.includes(field.id)) {
         console.log("includes:", field.id);
@@ -183,5 +184,13 @@ export class SettingsComponent implements OnInit {
     const spacedText = fieldName.replace(/([A-Z])/g, " $1");
     const result = spacedText.charAt(0).toUpperCase() + spacedText.slice(1);
     return result;
+  }
+
+  deleteField(fieldIndex: number) {
+    this.userFields.splice(fieldIndex, 1);
+    this.fieldService.userFields.next(this.userFields);
+    if (this.fileList.length > 0) {
+      this.fileList = this.parseImages(this.fileList);
+    }
   }
 }
