@@ -1,6 +1,6 @@
 <input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple />
 <h3>Image File Fields</h3>
-<div class="fields">
+<div class="fields" id="defaultFields">
     <input class="title cb" type="checkbox" id="defaultSelectAll" [checked]="allSelectedDefault" (change)="onSelectAll($event.target)"/>
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>
@@ -13,7 +13,7 @@
     </ng-container>
 </div>
 <h3>Additional Fields</h3>
-<div class="fields">
+<div class="fields" id="extraFields">
     <input class="title cb" type="checkbox" id="extraSelectAll" [checked]="allSelectedExtra" (change)="onSelectAll($event.target)"/>
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>
@@ -34,7 +34,7 @@
         <button type="submit">Add Field</button>
     </form>
 </div>
-<div class="fields deletable" *ngIf="userFields.length > 0">
+<div class="fields deletable" id="userFields" *ngIf="userFields.length > 0">
     <input class="title cb" type="checkbox" id="userSelectAll" [checked]="allSelectedUser" (change)="onSelectAll($event.target)" />
     <span class="title title-text">Field Name</span>
     <span class="title title-text">Field Id</span>

@@ -34,8 +34,12 @@ export class SettingsComponent implements OnInit {
     fieldService.extraFields.subscribe(fields => {
       this.extraFields = fields;
       this.imageService.images.next(this.parseImages(this.fileList));
+      this.refreshParsing();
     });
-    fieldService.userFields.subscribe(fields => this.userFields = fields);
+    fieldService.userFields.subscribe(fields => {
+      this.userFields = fields;
+      this.refreshParsing();
+    });
   }
 
   ngOnInit() {
@@ -56,9 +60,20 @@ export class SettingsComponent implements OnInit {
   }
 
   onFieldChange(field) {
-    switch (field.id) {
-      case 'id': {
-        this.fieldService.updateIdReference(field.value);
+    switch (field.parentElement.id) {
+      case 'extraFields': {
+        if (field.id === 'id') {
+          this.fieldService.updateIdReference(field.value);
+        }
+        if (this.checkIdValidity(field.value)) {
+          this.fieldService.updateExtraFieldValue(field.id, field.value);
+        }
+        break;
+      }
+      case 'userFields': {
+        if (this.checkIdValidity(field.value)) {
+          this.fieldService.updateUserFieldValue(field.id, field.value);
+        }
         break;
       }
       default: {
@@ -80,15 +95,17 @@ export class SettingsComponent implements OnInit {
     const index = this.extraFields.findIndex(field => field.name === fieldName);
     this.extraFields[index].selected = !this.extraFields[index].selected;
 
-    if (this.fileList.length > 0) {
-      this.fileList = this.parseImages(this.fileList);
-    }
+    this.refreshParsing();
   }
 
   onUserSelection(fieldName) {
     const index = this.userFields.findIndex(field => field.name === fieldName);
     this.userFields[index].selected = !this.userFields[index].selected;
 
+    this.refreshParsing();
+  }
+
+  private refreshParsing() {
     if (this.fileList.length > 0) {
       this.fileList = this.parseImages(this.fileList);
     }
@@ -122,33 +139,40 @@ export class SettingsComponent implements OnInit {
     const selected: boolean = event.target[0].checked;
     const name: string = event.target[1].value;
     const value: string = event.target[2].value;
-    const validName = this.checkValueForExistingName(name);
-    const idCount = this.valueIdCount(value);
-    const validIds = this.validId(value, idCount);
-    console.log(idCount, validIds);
-    const validId = idCount === validIds.length;
+    if (!this.fieldNameExists(name)) {
+      alert('Field with that name already exists!\n\n');
+      return;
+    }
 
-    if (validName && validId) {
+    if (this.checkIdValidity(value)) {
       this.userFields.push({ name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) });
       this.fieldService.userFields.next(this.userFields);
       if (this.fileList.length > 0) {
         this.fileList = this.parseImages(this.fileList);
       }
     }
+  }
+
+  private checkIdValidity(fieldValue: string): boolean {
+    const idCount = this.valueIdCount(fieldValue);
+    const validIds = this.validId(fieldValue, idCount);
+    const validId = idCount === validIds.length;
+
+    if (!validId) {
+      let validatedString = fieldValue;
+      validIds.forEach(id => {
+        validatedString = validatedString.replace(id, '<valid>');
+      });
+
+      alert('An id used in the field value does NOT exist!\n\n' + validatedString);
+      return false;
+    }
     else {
-      let alertString = '';
-      if (!validName) {
-        alertString = 'Field with that name already exists!\n\n';
-      }
-      if (!validId) {
-        alertString = alertString + 'An id used in the field value does NOT exist!\n';
-        alertString = validIds.length > 0 ? alertString + 'Valid ids found: \n\n' + validIds.toString() : alertString;
-      }
-      alert(alertString);
+      return true;
     }
   }
 
-  private checkValueForExistingName(fieldName: string): boolean {
+  private fieldNameExists(fieldName: string): boolean {
     return !this.defaultFields.find(field => field.name === fieldName) &&
       !this.extraFields.find(field => field.name === fieldName) &&
       !this.userFields.find(field => field.name === fieldName)
@@ -161,39 +185,45 @@ export class SettingsComponent implements OnInit {
         idCount++;
       }
     }
-    console.log(idCount);
     return idCount;
   }
 
   private validId(fieldValue: string, idCount) {
-
     const foundIds: string[] = [];
 
-    this.defaultFields.forEach(field => {
+    for (let i = 0; i < idCount; i++) {
+      const id = this.findId(fieldValue);
+      if (id !== null) {
+        fieldValue = fieldValue.replace(id, '<valid>');
+        foundIds.push(id);
+      }
+    }
+
+    return foundIds;
+  }
+
+  private findId(fieldValue: string): string {
+    let result: string = null;
+    this.defaultFields.some(field => {
       if (fieldValue.includes(field.id)) {
-        console.log("includes:", field.id);
-        foundIds.push(field.id);
-        idCount--;
+        result = field.id;
       }
     });
-    if (idCount > 0) {
-      this.extraFields.forEach(field => {
+    if (!result) {
+      this.extraFields.some(field => {
         if (fieldValue.includes(field.id)) {
-          console.log("includes:", field.id);
-          foundIds.push(field.id);
-          idCount--;
+          result = field.id;
         }
       });
     }
-    if (idCount > 0) {
-      this.userFields.forEach(field => {
+    if (!result) {
+      this.userFields.some(field => {
         if (fieldValue.includes(field.id)) {
-          console.log("includes:", field.id);
-          foundIds.push(field.id);
+          result = field.id;
         }
       });
     }
-    return foundIds;
+    return result;
   }
 
   fieldNameToText(fieldName: string): string {

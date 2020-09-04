@@ -67,6 +67,11 @@ export class FieldsService {
     this.extraFields.next(this.extraFields.value);
   }
 
+  updateUserFieldValue(fieldName: string, value) {
+    this.userFields.value.find(field => field.name === fieldName).value = value;
+    this.userFields.next(this.userFields.value);
+  }
+
   private defaultIdValues(image: FileDetail): object {
     const result = {};
     this.tempFieldValues = {};
