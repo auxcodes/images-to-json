@@ -2,7 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { AceEditorModule } from 'ng2-ace-editor';
 
 import { AppComponent } from './app.component';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -19,7 +21,9 @@ import { UserFieldInputComponent } from './shared/components/user-field-input/us
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    NgxJsonViewerModule,
+    AceEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

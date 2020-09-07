@@ -19,10 +19,13 @@ export class SettingsComponent implements OnInit {
   userFields: JsonField[] = [];
 
   fileList: FileDetail[] = [];
+  jsonOutput: object = {};
 
   allSelectedDefault = false;
   allSelectedExtra = false;
   allSelectedUser = false;
+  indexed = false;
+  dataKey = false;
 
   constructor(
     private imageService: ImagesService,
@@ -40,6 +43,7 @@ export class SettingsComponent implements OnInit {
       this.userFields = fields;
       this.refreshParsing();
     });
+    imageService.jsonOutput.subscribe(data => this.jsonOutput = data);
   }
 
   ngOnInit() {
@@ -48,9 +52,24 @@ export class SettingsComponent implements OnInit {
     });
   }
 
+  get code() {
+    return JSON.stringify(this.jsonOutput, null, 2);
+  }
+
+  set code(jsonString) {
+    console.log(jsonString);
+    try {
+      this.imageService.jsonOutput.next(JSON.parse(jsonString));
+    }
+    catch (e) {
+      console.log('error occored while you were typing the JSON');
+    };
+  }
+
   onFileSelected(event) {
     this.imageService.updateImageList(event.target.files);
     this.imageService.images.next(this.parseImages(this.fileList));
+    this.imageService.updateJsonOutput();
   }
 
   parseImages(images: FileDetail[]) {
@@ -85,10 +104,7 @@ export class SettingsComponent implements OnInit {
   onDefaultSelection(fieldName) {
     const index = this.defaultFields.findIndex(field => field.name === fieldName);
     this.defaultFields[index].selected = !this.defaultFields[index].selected;
-
-    if (this.fileList.length > 0) {
-      this.fileList = this.parseImages(this.fileList);
-    }
+    this.refreshParsing();
   }
 
   onExtraSelection(fieldName) {
@@ -103,12 +119,6 @@ export class SettingsComponent implements OnInit {
     this.userFields[index].selected = !this.userFields[index].selected;
 
     this.refreshParsing();
-  }
-
-  private refreshParsing() {
-    if (this.fileList.length > 0) {
-      this.fileList = this.parseImages(this.fileList);
-    }
   }
 
   onSelectAll(checkBox) {
@@ -130,9 +140,13 @@ export class SettingsComponent implements OnInit {
       }
     }
 
-    if (this.fileList.length > 0) {
-      this.fileList = this.parseImages(this.fileList);
-    }
+    this.refreshParsing();
+  }
+
+  onOutputPreviewChange(target) {
+    this.indexed = target === 'indexJson' ? !this.indexed : this.indexed;
+    this.dataKey = target === 'dataKeyJson' ? !this.dataKey : this.dataKey;
+    this.imageService.updateJsonOutput();
   }
 
   addField(event) {
@@ -145,12 +159,16 @@ export class SettingsComponent implements OnInit {
     }
 
     if (this.checkIdValidity(value)) {
-      this.userFields.push({ name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) });
+      const newField: JsonField = { name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) };
+      this.userFields.push(newField);
       this.fieldService.userFields.next(this.userFields);
-      if (this.fileList.length > 0) {
-        this.fileList = this.parseImages(this.fileList);
-      }
     }
+  }
+
+  deleteField(fieldIndex: number) {
+    this.userFields.splice(fieldIndex, 1);
+    this.fieldService.userFields.next(this.userFields);
+    this.refreshParsing();
   }
 
   private checkIdValidity(fieldValue: string): boolean {
@@ -169,6 +187,13 @@ export class SettingsComponent implements OnInit {
     }
     else {
       return true;
+    }
+  }
+
+  private refreshParsing() {
+    if (this.fileList.length > 0) {
+      this.fileList = this.parseImages(this.fileList);
+      this.imageService.updateJsonOutput();
     }
   }
 
@@ -226,17 +251,9 @@ export class SettingsComponent implements OnInit {
     return result;
   }
 
-  fieldNameToText(fieldName: string): string {
+  private fieldNameToText(fieldName: string): string {
     const spacedText = fieldName.replace(/([A-Z])/g, " $1");
     const result = spacedText.charAt(0).toUpperCase() + spacedText.slice(1);
     return result;
-  }
-
-  deleteField(fieldIndex: number) {
-    this.userFields.splice(fieldIndex, 1);
-    this.fieldService.userFields.next(this.userFields);
-    if (this.fileList.length > 0) {
-      this.fileList = this.parseImages(this.fileList);
-    }
   }
 }

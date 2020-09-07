@@ -143,14 +143,14 @@ export class FieldsService {
     return result;
   }
 
-  private parseFields(image: FileDetail): string {
+  private parseFields(image: FileDetail): object {
     const result = {
       ...this.parseDefaultFields(image),
       ...this.parseExtraFields(image),
       ...this.parseUserFields(image)
     };
 
-    return JSON.stringify(result);
+    return result;
   }
 
   private parseDefaultFields(image: FileDetail): object {

@@ -1,4 +1,25 @@
-.fields {
+.section-container {
+  display: flex;
+
+  section {
+      margin: 0 auto;
+      max-width: 550px;
+  }
+
+  .image-section {
+    display: flex;
+    flex-direction: column;
+
+    .image-row {
+      display: flex;
+      
+      .cb {
+        margin: 5px 5px 0 0;
+      }
+    }
+  }
+
+  .fields {
     display: grid;
     grid-template-columns: min-content repeat(2, max-content) auto;
     width: auto;
@@ -6,35 +27,40 @@
     margin: 16px auto 16px 0;
 
     .title {
-        border-bottom: 1px solid #666666;
+      border-bottom: 1px solid #666666;
     }
 
     .title-text {
-        margin: 2px;
-        text-align: center;
+      margin: 2px;
+      text-align: center;
     }
 
     .cb {
-        margin: 5px 5px 0 0;
+      margin: 5px 5px 0 0;
     }
 
     .field {
-        padding: 3px 10px;
+      padding: 3px 10px;
     }
-}
-
-.deletable {
-  grid-template-columns: min-content repeat(2, max-content) auto min-content;
-
-  .delete-icon {
-
   }
 
-  .delete-btn {
-  }
-}
+  .deletable {
+    grid-template-columns: min-content repeat(2, max-content) auto min-content;
 
-.output {
+    .delete-icon {
+    }
+
+    .delete-btn {
+    }
+  }
+
+  .output-editor {
+    height: 50vh;
+    width: 550px;
+  }
+
+  .output {
     display: flex;
     flex-direction: column;
+  }
 }
