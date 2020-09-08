@@ -4,4 +4,5 @@ export interface FileDetail {
   file: ImageFile;
   objects: object;
   idValues?: {};
+  selected: boolean;
 }

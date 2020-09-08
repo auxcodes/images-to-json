@@ -2,8 +2,8 @@
     <section class="image-section">
         <h3>Image Selection</h3>
         <input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple />
-        <div id="imageList" class="image-row" *ngFor="let image of fileList; let i = index">
-            <input class="cb" type="checkbox" [id]="image.file.name" [checked]="true" />
+        <div id="imageList" class="image-row" *ngFor="let image of allFiles; let i = index">
+            <input class="cb" type="checkbox" [id]="i" [checked]="image.selected"  (change)="onImageChecked($event.target.id)"/>
             <span class="image-name">{{image?.file.name}}</span>
         </div>
     </section>

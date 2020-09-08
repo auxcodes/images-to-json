@@ -18,7 +18,8 @@ export class SettingsComponent implements OnInit {
   extraFields: JsonField[] = [];
   userFields: JsonField[] = [];
 
-  fileList: FileDetail[] = [];
+  allFiles: FileDetail[] = [];
+  selectedFiles: FileDetail[] = [];
   jsonOutput: object = {};
 
   allSelectedDefault = false;
@@ -37,7 +38,7 @@ export class SettingsComponent implements OnInit {
     });
     fieldService.extraFields.subscribe(fields => {
       this.extraFields = fields;
-      this.imageService.images.next(this.parseImages(this.fileList));
+      this.imageService.images.next(this.parseImages(this.selectedFiles));
       this.refreshParsing();
     });
     fieldService.userFields.subscribe(fields => {
@@ -49,7 +50,13 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.imageService.images.subscribe(files => {
-      this.fileList = files;
+      this.allFiles = files;
+    });
+    this.imageService.selectedImages.subscribe(files => {
+      this.selectedFiles = files;
+      if (files.length > 0) {
+        this.refreshParsing();
+      }
     });
   }
 
@@ -70,7 +77,8 @@ export class SettingsComponent implements OnInit {
 
   onFileSelected(event) {
     this.imageService.updateImageList(event.target.files);
-    this.imageService.images.next(this.parseImages(this.fileList));
+    this.imageService.images.next(this.parseImages(this.allFiles));
+    this.imageService.updateSelectedImages();
     this.imageService.updateJsonOutput();
   }
 
@@ -78,6 +86,11 @@ export class SettingsComponent implements OnInit {
     let result: FileDetail[] = this.fieldService.updateIdValues(images);
     result = this.fieldService.parseSelectedFields(result);
     return result;
+  }
+
+  onImageChecked(imageId) {
+    this.allFiles[imageId].selected = !this.allFiles[imageId].selected;
+    this.imageService.updateSelectedImages(this.allFiles);
   }
 
   onFieldChange(field) {
@@ -174,7 +187,7 @@ export class SettingsComponent implements OnInit {
   }
 
   onSaveFile() {
-    if (this.fileList.length > 0) {
+    if (this.selectedFiles.length > 0) {
       this.fileService.saveToFile(this.jsonOutput);
     }
     else {
@@ -202,8 +215,8 @@ export class SettingsComponent implements OnInit {
   }
 
   private refreshParsing() {
-    if (this.fileList.length > 0) {
-      this.fileList = this.parseImages(this.fileList);
+    if (this.selectedFiles.length > 0) {
+      this.selectedFiles = this.parseImages(this.selectedFiles);
       this.imageService.updateJsonOutput();
     }
   }
