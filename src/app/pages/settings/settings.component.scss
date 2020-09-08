@@ -2,8 +2,8 @@
   display: flex;
 
   section {
-      margin: 0 auto;
-      max-width: 550px;
+    margin: 0 auto;
+    max-width: 550px;
   }
 
   .image-section {
@@ -12,9 +12,32 @@
 
     .image-row {
       display: flex;
-      
+
       .cb {
         margin: 5px 5px 0 0;
+      }
+    }
+  }
+
+  .field-section {
+
+    .user-fields {
+      form {
+        display: grid;
+        grid-template-columns: min-content repeat(2, auto) max-content;
+
+        .cb {
+          margin: 2px 2px 0 0;
+        }
+
+        .field {
+          padding: 3px 5px;
+          margin: 2px;
+        }
+
+        button {
+          margin: 1px;
+        }
       }
     }
   }
@@ -36,11 +59,12 @@
     }
 
     .cb {
-      margin: 5px 5px 0 0;
+      margin: 2px 2px 0 0;
     }
 
     .field {
-      padding: 3px 10px;
+      padding: 3px 5px;
+      margin: 2px;
     }
   }
 
@@ -54,13 +78,29 @@
     }
   }
 
-  .output-editor {
-    height: 50vh;
-    width: 550px;
-  }
+  .output-section {
+    .output-header {
+      display: flex;
 
-  .output {
-    display: flex;
-    flex-direction: column;
+      button {
+        margin: auto 0 auto auto;
+      }
+    }
+
+    .output-editor {
+      height: 50vh;
+      width: 550px;
+    }
+
+    .output {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .json-viewer {
+      .ngx-json-viewer {
+        height: auto;
+      }
+    }
   }
 }

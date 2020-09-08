@@ -10,6 +10,13 @@ export class FileManagerService {
 
   constructor() { }
 
+  saveToFile(contents) {
+    const fileContent = contents;
+    const filename = 'Images2json' + '_' + this.fileDate() + '.json';
+    const blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
+    saveAs(blob, filename);
+  }
+
   openFile(file) {
     let contents;
     const reader = new FileReader();
@@ -19,12 +26,6 @@ export class FileManagerService {
     reader.readAsText(file);
   }
 
-  saveToFile(contents) {
-    const fileContent = contents;
-    const filename = 'Images2json' + '_' + this.fileDate() + '.json';
-    const blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
-    saveAs(blob, filename);
-  }
 
   private fileDate(): string{
     const pipe = new DatePipe('en-US');

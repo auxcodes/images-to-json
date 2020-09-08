@@ -36,10 +36,10 @@
         </div>
         <h3>Create Your Own Fields</h3>
         <div class="user-fields">
-            <form (ngSubmit)="addField($event)" id="search" #addFieldForm="ngForm">
+            <form (ngSubmit)="onAddField($event)" id="search" #addFieldForm="ngForm">
                 <input class="field cb" type="checkbox" checked="checked" id="selected" />
-                <input type="text" id="name" placeholder="field name" />
-                <input type="text" id="id" placeholder="field value" />
+                <input class="field" type="text" id="name" placeholder="field name" />
+                <input class="field" type="text" id="id" placeholder="field value" />
                 <button type="submit">Add Field</button>
             </form>
         </div>
@@ -54,14 +54,17 @@
                 <span class="field">{{field?.text}}</span>
                 <span class="field">{{field?.id}}</span>
                 <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
-                <button class="delete-btn" (click)="deleteField(i)">X</button>
+                <button class="delete-btn" (click)="onDeleteField(i)">X</button>
             </ng-container>
         </div>
     </section>
     <section class="output-section">
-        <h3>Output Preview</h3>
+        <div class="output-header">
+            <h3>Output Preview</h3>
+            <button  (click)="onSaveFile()">Save</button>
+        </div>
         <ace-editor class="output-editor" [(text)]="code" mode="json"></ace-editor>
-        <ngx-json-viewer [json]="jsonOutput"></ngx-json-viewer>
+        <ngx-json-viewer class="json-viewer" [json]="jsonOutput"></ngx-json-viewer>
     </section>
 
 

@@ -29,7 +29,8 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private imageService: ImagesService,
-    private fieldService: FieldsService
+    private fieldService: FieldsService,
+    private fileService: FileManagerService,
   ) {
     fieldService.defaultFields.subscribe(fields => {
       this.defaultFields = fields;
@@ -57,12 +58,13 @@ export class SettingsComponent implements OnInit {
   }
 
   set code(jsonString) {
-    console.log(jsonString);
     try {
-      this.imageService.jsonOutput.next(JSON.parse(jsonString));
+      if (jsonString) {
+        this.imageService.jsonOutput.next(JSON.parse(jsonString));
+      }
     }
     catch (e) {
-      console.log('error occored while you were typing the JSON');
+      console.log('Error occored while you were typing the JSON', e);
     };
   }
 
@@ -149,7 +151,7 @@ export class SettingsComponent implements OnInit {
     this.imageService.updateJsonOutput();
   }
 
-  addField(event) {
+  onAddField(event) {
     const selected: boolean = event.target[0].checked;
     const name: string = event.target[1].value;
     const value: string = event.target[2].value;
@@ -165,10 +167,19 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  deleteField(fieldIndex: number) {
+  onDeleteField(fieldIndex: number) {
     this.userFields.splice(fieldIndex, 1);
     this.fieldService.userFields.next(this.userFields);
     this.refreshParsing();
+  }
+
+  onSaveFile() {
+    if (this.fileList.length > 0) {
+      this.fileService.saveToFile(this.jsonOutput);
+    }
+    else {
+      alert('No images selected!');
+    }
   }
 
   private checkIdValidity(fieldValue: string): boolean {
