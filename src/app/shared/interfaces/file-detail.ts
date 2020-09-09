@@ -5,6 +5,5 @@ export interface FileDetail {
   objects: object;
   idValues?: {};
   selected: boolean;
-  preview?: number;
   previewImage?: string;
 }

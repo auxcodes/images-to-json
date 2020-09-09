@@ -18,7 +18,7 @@ export class ImagesService {
     const images: FileDetail[] = [];
     for (let i = 0; i < rawImages.length; i++) {
       this.imagePreview(rawImages[i]);
-      const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true, preview: i };
+      const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true, previewImage: 'assets/images/image_broken.svg' };
       images.push(image);
     }
     this.images.next(images);
