@@ -17,10 +17,23 @@ export class ImagesService {
     const rawImages = files;
     const images: FileDetail[] = [];
     for (let i = 0; i < rawImages.length; i++) {
-      const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true };
+      this.imagePreview(rawImages[i]);
+      const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true, preview: i };
       images.push(image);
     }
     this.images.next(images);
+  }
+
+  private imagePreview(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.updateImagePreviews(file.name, reader.result.toString());
+    }
+    reader.readAsDataURL(file);
+  }
+
+  private updateImagePreviews(name: string, preview) {
+    this.images.getValue().find(image => image.file.name === name).previewImage = preview;
   }
 
   updateSelectedImages(updatedList?: FileDetail[]) {

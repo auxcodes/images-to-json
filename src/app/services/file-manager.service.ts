@@ -21,13 +21,13 @@ export class FileManagerService {
     let contents;
     const reader = new FileReader();
     reader.onload = progressEvent => {
-        contents = reader.result;
+      contents = reader.result;
     }
     reader.readAsText(file);
   }
 
 
-  private fileDate(): string{
+  private fileDate(): string {
     const pipe = new DatePipe('en-US');
     const date = Date.now();
     const dateString = pipe.transform(date, 'yyyy-MM-dd_hhmmss');
