@@ -3,9 +3,7 @@ import { JsonField } from '../shared/interfaces/json-field';
 import { FieldType } from '../shared/enums/field-type.enum';
 import { ImagesService } from './images.service';
 import { BehaviorSubject } from 'rxjs';
-import { ImageFile } from '../shared/interfaces/image-file';
 import { FileDetail } from '../shared/interfaces/file-detail';
-import { FieldValue } from '../shared/interfaces/field-value';
 
 @Injectable({
   providedIn: 'root'

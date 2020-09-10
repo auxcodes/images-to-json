@@ -65,7 +65,8 @@
     <section class="output-section">
         <div class="output-header">
             <h3>Output Preview</h3>
-            <button  (click)="onSaveFile()">Save</button>
+            <button (click)="onSaveFile()">Save</button>
+            <app-open-json-file class="open-btn"></app-open-json-file>
         </div>
         <ace-editor class="output-editor" [(text)]="code" mode="json"></ace-editor>
         <ngx-json-viewer class="json-viewer" [json]="jsonOutput"></ngx-json-viewer>

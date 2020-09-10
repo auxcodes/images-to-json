@@ -10,13 +10,15 @@ import { AppComponent } from './app.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { UserFieldComponent } from './shared/components/user-field/user-field.component';
 import { UserFieldInputComponent } from './shared/components/user-field-input/user-field-input.component';
+import { OpenJsonFileComponent } from './shared/components/open-json-file/open-json-file.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SettingsComponent,
     UserFieldComponent,
-    UserFieldInputComponent
+    UserFieldInputComponent,
+    OpenJsonFileComponent
   ],
   imports: [
     BrowserModule,

@@ -76,7 +76,6 @@ export class SettingsComponent implements OnInit {
   }
 
   onFileSelected(event) {
-    console.log(event);
     this.imageService.updateImageList(event.target.files);
     this.imageService.images.next(this.parseImages(this.allFiles));
     this.imageService.updateSelectedImages();
