@@ -50,9 +50,12 @@ export class ImagesService {
     this.selectedImages.next(selected);
   }
 
-  updateJsonOutput() {
+  updateJsonOutput(fieldsUsed) {
     const jsonObjects = this.selectedImages.value.map(image => { return image.objects; });
-    const jsonObj = { data: jsonObjects };
+    const jsonObj = {
+      data: jsonObjects,
+      fields: fieldsUsed
+    };
     this.jsonOutput.next(jsonObj);
   }
 

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { JsonField } from '../shared/interfaces/json-field';
 import { FieldType } from '../shared/enums/field-type.enum';
-import { ImagesService } from './images.service';
 import { BehaviorSubject } from 'rxjs';
 import { FileDetail } from '../shared/interfaces/file-detail';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,17 @@ export class FieldsService {
   userFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
   tempFieldValues: object = {};
 
-  constructor(private imageService: ImagesService) { }
+  constructor(private storageService: LocalStorageService) { }
+
+  updateStorage(): object {
+    const jsonEntry = {
+      'defaultFields': this.defaultFields.value,
+      'extraFields': this.extraFields.value,
+      'userFields': this.userFields.value
+    }
+    this.storageService.updateJSONEntry('images2json.aux.codes', jsonEntry);
+    return jsonEntry;
+  }
 
   updateIdReference(value: number) {
     this.fileIdReference = value;

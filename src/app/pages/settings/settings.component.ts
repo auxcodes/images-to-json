@@ -32,6 +32,7 @@ export class SettingsComponent implements OnInit {
     private imageService: ImagesService,
     private fieldService: FieldsService,
     private fileService: FileManagerService,
+    
   ) {
     fieldService.defaultFields.subscribe(fields => {
       this.defaultFields = fields;
@@ -79,7 +80,7 @@ export class SettingsComponent implements OnInit {
     this.imageService.updateImageList(event.target.files);
     this.imageService.images.next(this.parseImages(this.allFiles));
     this.imageService.updateSelectedImages();
-    this.imageService.updateJsonOutput();
+    this.imageService.updateJsonOutput(this.fieldService.updateStorage());
   }
 
   parseImages(images: FileDetail[]) {
@@ -114,25 +115,27 @@ export class SettingsComponent implements OnInit {
         break;
       }
     }
+    this.fieldService.updateStorage();
   }
 
   onDefaultSelection(fieldName) {
     const index = this.defaultFields.findIndex(field => field.name === fieldName);
     this.defaultFields[index].selected = !this.defaultFields[index].selected;
+    this.fieldService.updateStorage();
     this.refreshParsing();
   }
 
   onExtraSelection(fieldName) {
     const index = this.extraFields.findIndex(field => field.name === fieldName);
     this.extraFields[index].selected = !this.extraFields[index].selected;
-
+    this.fieldService.updateStorage();
     this.refreshParsing();
   }
 
   onUserSelection(fieldName) {
     const index = this.userFields.findIndex(field => field.name === fieldName);
     this.userFields[index].selected = !this.userFields[index].selected;
-
+    this.fieldService.updateStorage();
     this.refreshParsing();
   }
 
@@ -154,14 +157,14 @@ export class SettingsComponent implements OnInit {
         break;
       }
     }
-
     this.refreshParsing();
+    this.fieldService.updateStorage();
   }
 
   onOutputPreviewChange(target) {
     this.indexed = target === 'indexJson' ? !this.indexed : this.indexed;
     this.dataKey = target === 'dataKeyJson' ? !this.dataKey : this.dataKey;
-    this.imageService.updateJsonOutput();
+    this.imageService.updateJsonOutput(this.fieldService.updateStorage());
   }
 
   onAddField(event) {
@@ -177,6 +180,7 @@ export class SettingsComponent implements OnInit {
       const newField: JsonField = { name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) };
       this.userFields.push(newField);
       this.fieldService.userFields.next(this.userFields);
+      this.fieldService.updateStorage();
     }
   }
 
@@ -217,7 +221,7 @@ export class SettingsComponent implements OnInit {
   private refreshParsing() {
     if (this.selectedFiles.length > 0) {
       this.selectedFiles = this.parseImages(this.selectedFiles);
-      this.imageService.updateJsonOutput();
+      this.imageService.updateJsonOutput(this.fieldService.updateStorage());  
     }
   }
 
