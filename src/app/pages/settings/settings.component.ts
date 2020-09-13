@@ -34,18 +34,10 @@ export class SettingsComponent implements OnInit {
     private fileService: FileManagerService,
     
   ) {
-    fieldService.defaultFields.subscribe(fields => {
-      this.defaultFields = fields;
-    });
-    fieldService.extraFields.subscribe(fields => {
-      this.extraFields = fields;
-      this.imageService.images.next(this.parseImages(this.selectedFiles));
-      this.refreshParsing();
-    });
-    fieldService.userFields.subscribe(fields => {
-      this.userFields = fields;
-      this.refreshParsing();
-    });
+
+
+    this.fieldService.checkStorage();
+    this.subscribeToFields();
     imageService.jsonOutput.subscribe(data => this.jsonOutput = data);
   }
 
@@ -58,6 +50,21 @@ export class SettingsComponent implements OnInit {
       if (files.length > 0) {
         this.refreshParsing();
       }
+    });
+  }
+
+  private subscribeToFields() {
+    this.fieldService.defaultFields.subscribe(fields => {
+      this.defaultFields = fields;
+    });
+    this.fieldService.extraFields.subscribe(fields => {
+      this.extraFields = fields;
+      this.imageService.images.next(this.parseImages(this.selectedFiles));
+      this.refreshParsing();
+    });
+    this.fieldService.userFields.subscribe(fields => {
+      this.userFields = fields;
+      this.refreshParsing();
     });
   }
 

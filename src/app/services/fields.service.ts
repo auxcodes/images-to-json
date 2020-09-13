@@ -4,12 +4,15 @@ import { FieldType } from '../shared/enums/field-type.enum';
 import { BehaviorSubject } from 'rxjs';
 import { FileDetail } from '../shared/interfaces/file-detail';
 import { LocalStorageService } from './local-storage.service';
+import { StoredFields } from '../shared/interfaces/stored-fields';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FieldsService {
 
+  storageKey = 'images2json.aux.codes';
+  tempFieldValues: object = {};
   date: Date = new Date();
   fileIdReference = 1;
   fileIdCurrent = 1;
@@ -30,17 +33,30 @@ export class FieldsService {
   ]);
 
   userFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
-  tempFieldValues: object = {};
 
   constructor(private storageService: LocalStorageService) { }
 
+  checkStorage() {
+    this.storageService.readJSONEntry(this.storageKey).then(storage => {
+      if (storage) {
+        this.setAllFields(storage);
+      }
+    });
+  }
+
+  setAllFields(fields: StoredFields) {
+    this.defaultFields.next(fields.defaultFields);
+    this.extraFields.next(fields.extraFields);
+    this.userFields.next(fields.userFields);
+  }
+
   updateStorage(): object {
-    const jsonEntry = {
+    const jsonEntry: StoredFields = {
       'defaultFields': this.defaultFields.value,
       'extraFields': this.extraFields.value,
       'userFields': this.userFields.value
     }
-    this.storageService.updateJSONEntry('images2json.aux.codes', jsonEntry);
+    this.storageService.updateJSONEntry(this.storageKey, jsonEntry);
     return jsonEntry;
   }
 

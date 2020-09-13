@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { StoredFields } from '../shared/interfaces/stored-fields';
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +32,12 @@ export class LocalStorageService {
     }
   }
 
-  readJSONEntry(key) {
+  async readJSONEntry(key): Promise<StoredFields> {
     if (this.supported && this.hasEntry) {
       return JSON.parse(localStorage.getItem(key));
+    }
+    else {
+      return null;
     }
   }
 
