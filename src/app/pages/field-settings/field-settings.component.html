@@ -1,0 +1,51 @@
+<section class="field-section">
+    <h3>Image File Fields</h3>
+    <div class="fields" id="defaultFields">
+        <input class="title cb" type="checkbox" id="defaultSelectAll" [checked]="allSelectedDefault" (change)="onSelectAll($event.target)" />
+        <span class="title title-text">Field Name</span>
+        <span class="title title-text">Field Id</span>
+        <span class="title title-text">Value</span>
+        <ng-container id="defaultFields" class="row" *ngFor="let field of defaultFields; let i = index">
+            <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onDefaultSelection($event.target.id)" />
+            <span class="field">{{field?.text}}</span>
+            <span class="field">{{field?.id}}</span>
+            <span class="field">{{field?.value}}</span>
+        </ng-container>
+    </div>
+    <h3>Additional Fields</h3>
+    <div class="fields" id="extraFields">
+        <input class="title cb" type="checkbox" id="extraSelectAll" [checked]="allSelectedExtra" (change)="onSelectAll($event.target)" />
+        <span class="title title-text">Field Name</span>
+        <span class="title title-text">Field Id</span>
+        <span class="title title-text">Value</span>
+        <ng-container id="extraFields" class="row" *ngFor="let field of extraFields; let i = index">
+            <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onExtraSelection($event.target.id)" />
+            <span class="field">{{field?.text}}</span>
+            <span class="field">{{field?.id}}</span>
+            <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
+        </ng-container>
+    </div>
+    <h3>Create Your Own Fields</h3>
+    <div class="user-fields">
+        <form (ngSubmit)="onAddField($event)" id="search" #addFieldForm="ngForm">
+            <input class="field cb" type="checkbox" checked="checked" id="selected" />
+            <input class="field" type="text" id="name" placeholder="field name" />
+            <input class="field" type="text" id="id" placeholder="field value" />
+            <button type="submit">Add Field</button>
+        </form>
+    </div>
+    <div class="fields deletable" id="userFields" *ngIf="userFields.length > 0">
+        <input class="title cb" type="checkbox" id="userSelectAll" [checked]="allSelectedUser" (change)="onSelectAll($event.target)" />
+        <span class="title title-text">Field Name</span>
+        <span class="title title-text">Field Id</span>
+        <span class="title title-text">Value</span>
+        <span class="title title-text delete-icon">X</span>
+        <ng-container id="userFields" class="row" *ngFor="let field of userFields; let i = index">
+            <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onUserSelection($event.target.id)" />
+            <span class="field">{{field?.text}}</span>
+            <span class="field">{{field?.id}}</span>
+            <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
+            <button class="delete-btn" (click)="onDeleteField(i)">X</button>
+        </ng-container>
+    </div>
+</section>

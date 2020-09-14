@@ -11,6 +11,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { UserFieldComponent } from './shared/components/user-field/user-field.component';
 import { UserFieldInputComponent } from './shared/components/user-field-input/user-field-input.component';
 import { OpenJsonFileComponent } from './shared/components/open-json-file/open-json-file.component';
+import { FieldSettingsComponent } from './pages/field-settings/field-settings.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { OpenJsonFileComponent } from './shared/components/open-json-file/open-j
     SettingsComponent,
     UserFieldComponent,
     UserFieldInputComponent,
-    OpenJsonFileComponent
+    OpenJsonFileComponent,
+    FieldSettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -84,64 +84,6 @@
     }
   }
 
-  .field-section {
-    .user-fields {
-      form {
-        display: grid;
-        grid-template-columns: min-content repeat(2, auto) max-content;
-
-        .cb {
-          margin: 2px 2px 0 0;
-        }
-
-        .field {
-          padding: 3px 5px;
-          margin: 2px;
-        }
-
-        button {
-          margin: 1px;
-        }
-      }
-    }
-  }
-
-  .fields {
-    display: grid;
-    grid-template-columns: min-content repeat(2, max-content) auto;
-    width: auto;
-    max-width: 700px;
-    margin: 16px auto 16px 0;
-
-    .title {
-      border-bottom: 1px solid #666666;
-    }
-
-    .title-text {
-      margin: 2px;
-      text-align: center;
-    }
-
-    .cb {
-      margin: 2px 2px 0 0;
-    }
-
-    .field {
-      padding: 3px 5px;
-      margin: 2px;
-    }
-  }
-
-  .deletable {
-    grid-template-columns: min-content repeat(2, max-content) auto min-content;
-
-    .delete-icon {
-    }
-
-    .delete-btn {
-    }
-  }
-
   .output-section {
     .output-header {
       display: flex;
