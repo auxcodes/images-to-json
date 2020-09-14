@@ -2,7 +2,7 @@
     <section class="images-section">
         <div class="images-header">
             <h2>Images</h2>
-            <button (click)="onReset()">Reset</button>
+            <button (click)="onImagesReset()">Reset</button>
         </div>
         <h3>Image Selection</h3>
         <input type="file" id="file-selector" accept="image/*" (change)="onFileSelected($event)" multiple />
@@ -25,7 +25,7 @@
         <h3>Output Editor</h3>
         <ace-editor class="output-editor" [(text)]="code" mode="json"></ace-editor>
         <h3>Json Viewer</h3>
-        <ngx-json-viewer class="json-viewer" [json]="jsonOutput"></ngx-json-viewer>
+        <ngx-json-viewer class="json-viewer" [json]="jsonOutput" ></ngx-json-viewer>
     </section>
 
 

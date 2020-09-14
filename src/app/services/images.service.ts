@@ -9,7 +9,7 @@ export class ImagesService {
 
   images: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   selectedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
-  jsonOutput: BehaviorSubject<object> = new BehaviorSubject<object>({});
+  jsonOutput: BehaviorSubject<object> = new BehaviorSubject<object>({ data: [] });
 
   constructor() { }
 
@@ -57,6 +57,12 @@ export class ImagesService {
       fields: fieldsUsed
     };
     this.jsonOutput.next(jsonObj);
+  }
+
+  resetImages() {
+    this.images.next([]);
+    this.selectedImages.next([]);
+    this.jsonOutput.next({ data: []});
   }
 
 }

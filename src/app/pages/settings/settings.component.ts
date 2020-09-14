@@ -88,6 +88,10 @@ export class SettingsComponent implements OnInit {
     }
   }
 
+  onImagesReset() {
+    this.imageService.resetImages();
+  }
+
   refreshParsing(parseAllImages: boolean) {
     if (this.selectedFiles.length > 0) {
       if (parseAllImages) {
@@ -97,5 +101,7 @@ export class SettingsComponent implements OnInit {
       this.imageService.updateJsonOutput(this.fieldService.updateStorage());  
     }
   }
+
+
 
 }
