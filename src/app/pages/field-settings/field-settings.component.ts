@@ -23,11 +23,12 @@ export class FieldSettingsComponent implements OnInit {
   constructor(
     private fieldService: FieldsService
   ) {
-    this.fieldService.checkStorage();
-    this.subscribeToFields();
+
   }
 
   ngOnInit() {
+    this.fieldService.checkStorage();
+    this.subscribeToFields();
   }
 
   private subscribeToFields() {
@@ -138,6 +139,9 @@ export class FieldSettingsComponent implements OnInit {
     this.refreshParsing(false);
   }
 
+  onClearStorage() {
+    this.fieldService.clearStorage();
+  }
 
   private checkIdValidity(fieldValue: string): boolean {
     const idCount = this.valueIdCount(fieldValue);

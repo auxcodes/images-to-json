@@ -6,9 +6,21 @@
     max-width: 550px;
   }
 
-  .image-section {
+  .images-section {
     display: flex;
     flex-direction: column;
+
+    .images-header {
+      display: flex;
+
+      button {
+        margin: auto 0 auto auto;
+      }
+
+      .open-btn {
+        margin: auto 0 auto 0;
+      }
+    }
 
     .selected-files {
       display: grid;

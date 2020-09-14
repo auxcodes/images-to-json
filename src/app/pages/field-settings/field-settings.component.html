@@ -1,4 +1,8 @@
 <section class="field-section">
+    <div class="fields-header">
+        <h2>Fields</h2>
+        <button (click)="onClearStorage()" on>Reset</button>
+    </div>
     <h3>Image File Fields</h3>
     <div class="fields" id="defaultFields">
         <input class="title cb" type="checkbox" id="defaultSelectAll" [checked]="allSelectedDefault" (change)="onSelectAll($event.target)" />

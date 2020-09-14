@@ -17,24 +17,13 @@ export class FieldsService {
   fileIdReference = 1;
   fileIdCurrent = 1;
 
-  defaultFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([
-    { name: 'name', text: 'Name', selected: true, id: '$name', value: 'eg: example.jpg', type: FieldType.string },
-    { name: 'size', text: 'Size', selected: false, id: '$size', value: 'eg: 174026', type: FieldType.number },
-    { name: 'type', text: 'Type', selected: false, id: '$type', value: 'eg: image/jpeg', type: FieldType.string },
-    { name: 'lastModified', text: 'Last Modified', selected: false, id: '$lastModified', value: 'eg: 1491809664570', type: FieldType.number }
-  ]);
-
-  extraFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([
-    { name: 'id', text: 'File id', selected: false, id: '$id', value: 1, type: FieldType.number },
-    { name: 'addDate', text: 'Add Date', selected: false, id: '$addDate', value: this.date.getTime(), type: FieldType.number },
-    { name: 'fullpath', text: 'Full Path', selected: false, id: '$fullpath', value: 'https://fullpath.com/images/$name', type: FieldType.string },
-    { name: 'relativePath', text: 'Relative Path', selected: false, id: '$relativePath', value: 'images/$name', type: FieldType.string },
-    { name: 'thumbnail', text: 'Thumbnail Path', selected: false, id: '$thumbnail', value: 'images/thumbnail/$name', type: FieldType.string },
-  ]);
-
+  defaultFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
+  extraFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
   userFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
 
-  constructor(private storageService: LocalStorageService) { }
+  constructor(private storageService: LocalStorageService) {
+    this.resetFields();
+  }
 
   checkStorage() {
     this.storageService.readJSONEntry(this.storageKey).then(storage => {
@@ -42,6 +31,28 @@ export class FieldsService {
         this.setAllFields(storage);
       }
     });
+  }
+
+  clearStorage() {
+    this.storageService.clearStorage();
+    this.resetFields();
+  }
+
+  private resetFields() {
+    this.defaultFields.next([
+      { name: 'name', text: 'Name', selected: true, id: '$name', value: 'eg: example.jpg', type: FieldType.string },
+      { name: 'size', text: 'Size', selected: false, id: '$size', value: 'eg: 174026', type: FieldType.number },
+      { name: 'type', text: 'Type', selected: false, id: '$type', value: 'eg: image/jpeg', type: FieldType.string },
+      { name: 'lastModified', text: 'Last Modified', selected: false, id: '$lastModified', value: 'eg: 1491809664570', type: FieldType.number }
+    ]);
+    this.extraFields.next([
+      { name: 'id', text: 'File id', selected: false, id: '$id', value: 1, type: FieldType.number },
+      { name: 'addDate', text: 'Add Date', selected: false, id: '$addDate', value: this.date.getTime(), type: FieldType.number },
+      { name: 'fullpath', text: 'Full Path', selected: false, id: '$fullpath', value: 'https://fullpath.com/images/$name', type: FieldType.string },
+      { name: 'relativePath', text: 'Relative Path', selected: false, id: '$relativePath', value: 'images/$name', type: FieldType.string },
+      { name: 'thumbnail', text: 'Thumbnail Path', selected: false, id: '$thumbnail', value: 'images/thumbnail/$name', type: FieldType.string },
+    ]);
+    this.userFields.next([]);
   }
 
   setAllFields(fields: StoredFields) {

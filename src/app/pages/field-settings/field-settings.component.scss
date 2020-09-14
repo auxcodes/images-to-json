@@ -1,4 +1,13 @@
 .field-section {
+  .fields-header {
+    display: flex;
+
+    button {
+      margin: auto 0 auto auto;
+    }
+
+  }
+
   .user-fields {
     form {
       display: grid;
