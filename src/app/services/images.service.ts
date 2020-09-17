@@ -9,6 +9,7 @@ export class ImagesService {
 
   images: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   selectedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
+  reparse: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   jsonOutput: BehaviorSubject<object> = new BehaviorSubject<object>({ data: [] });
 
   constructor() { }

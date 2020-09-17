@@ -12,6 +12,7 @@ import { UserFieldComponent } from './shared/components/user-field/user-field.co
 import { UserFieldInputComponent } from './shared/components/user-field-input/user-field-input.component';
 import { OpenJsonFileComponent } from './shared/components/open-json-file/open-json-file.component';
 import { FieldSettingsComponent } from './pages/field-settings/field-settings.component';
+import { ImageSelectionComponent } from './pages/image-selection/image-selection.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FieldSettingsComponent } from './pages/field-settings/field-settings.co
     UserFieldComponent,
     UserFieldInputComponent,
     OpenJsonFileComponent,
-    FieldSettingsComponent
+    FieldSettingsComponent,
+    ImageSelectionComponent
   ],
   imports: [
     BrowserModule,

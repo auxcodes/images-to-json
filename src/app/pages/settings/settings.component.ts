@@ -11,8 +11,6 @@ import { FieldsService } from '../../services/fields.service';
 })
 export class SettingsComponent implements OnInit {
 
-  allFiles: FileDetail[] = [];
-  selectedFiles: FileDetail[] = [];
   jsonOutput: object = {};
 
   indexed = false;
@@ -21,23 +19,16 @@ export class SettingsComponent implements OnInit {
   constructor(
     private imageService: ImagesService,
     private fieldService: FieldsService,
-    private fileService: FileManagerService,
-    
+    private fileService: FileManagerService
   ) {
-
     imageService.jsonOutput.subscribe(data => this.jsonOutput = data);
   }
 
   ngOnInit() {
-    this.imageService.images.subscribe(files => {
-      this.allFiles = files;
-    });
-    this.imageService.selectedImages.subscribe(files => {
-      this.selectedFiles = files;
-      if (files.length > 0) {
-        this.refreshParsing(false);
-      }
-    });
+  }
+
+  onRefreshParsing(reparseAll) {
+    this.imageService.reparse.next(reparseAll);
   }
 
   get code() {
@@ -55,24 +46,6 @@ export class SettingsComponent implements OnInit {
     };
   }
 
-  onFileSelected(event) {
-    this.imageService.updateImageList(event.target.files);
-    this.imageService.images.next(this.parseImages(this.allFiles));
-    this.imageService.updateSelectedImages();
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage());
-  }
-
-  parseImages(images: FileDetail[]) {
-    let result: FileDetail[] = this.fieldService.updateIdValues(images);
-    result = this.fieldService.parseSelectedFields(result);
-    return result;
-  }
-
-  onImageChecked(imageId) {
-    this.allFiles[imageId].selected = !this.allFiles[imageId].selected;
-    this.imageService.updateSelectedImages(this.allFiles);
-  }
-
   onOutputPreviewChange(target) {
     this.indexed = target === 'indexJson' ? !this.indexed : this.indexed;
     this.dataKey = target === 'dataKeyJson' ? !this.dataKey : this.dataKey;
@@ -80,28 +53,11 @@ export class SettingsComponent implements OnInit {
   }
 
   onSaveFile() {
-    if (this.selectedFiles.length > 0) {
+    if (this.imageService.selectedImages.value.length > 0) {
       this.fileService.saveToFile(this.jsonOutput);
     }
     else {
       alert('No images selected!');
     }
   }
-
-  onImagesReset() {
-    this.imageService.resetImages();
-  }
-
-  refreshParsing(parseAllImages: boolean) {
-    if (this.selectedFiles.length > 0) {
-      if (parseAllImages) {
-        this.imageService.images.next(this.parseImages(this.selectedFiles));
-      }
-      this.selectedFiles = this.parseImages(this.selectedFiles);
-      this.imageService.updateJsonOutput(this.fieldService.updateStorage());  
-    }
-  }
-
-
-
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FileManagerService } from '../../../services/file-manager.service';
 import { ImagesService } from '../../../services/images.service';
 import { FileDetail } from '../../interfaces/file-detail';
@@ -17,6 +17,8 @@ export class OpenJsonFileComponent implements OnInit {
   private jsonObjects: object[] = [];
   private fieldKeys: string[] = [];
 
+  @ViewChild('FileSelectInputDialog', {static: false}) fileSelectDialog: ElementRef;
+
   constructor(
     private fileService: FileManagerService,
     private imageService: ImagesService,
@@ -31,6 +33,11 @@ export class OpenJsonFileComponent implements OnInit {
         this.imageService.images.next(this.imageFiles(this.jsonObjects));
       }
     });
+  }
+
+  onOpenFileDialog() {
+    const e: HTMLElement = this.fileSelectDialog.nativeElement;
+    e.click();
   }
 
   onOpenFile(file) {

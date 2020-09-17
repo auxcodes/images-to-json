@@ -1,0 +1,17 @@
+<section class="images-section">
+    <div class="section-header images-header">
+        <h2>Images</h2>
+        <button (click)="onImagesReset()">Reset</button>
+    </div>
+    <h3>Image Selection</h3>
+    <input class="browse-input" id="file-selector" #ImageSelectInputDialog type="file" accept="image/*" (change)="onFileSelected($event)" multiple />
+    <button class="browse-btn" (click)="onOpenFileDialog()">Select</button>
+    <div class="selected-files">
+        <div id="imageList" class="image-preview" *ngFor="let image of allFiles; let i = index">
+            <input type="checkbox" [id]="i" [checked]="image.selected" (change)="onImageChecked($event.target.id)" />
+            <label [for]="i">
+                <img class="preview" [src]="image?.previewImage" [alt]="image?.file.name" />
+            </label>
+        </div>
+    </div>
+</section>

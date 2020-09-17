@@ -1,5 +1,5 @@
 <section class="field-section">
-    <div class="fields-header">
+    <div class="section-header fields-header">
         <h2>Fields</h2>
         <button (click)="onClearStorage()" on>Reset</button>
     </div>
@@ -12,7 +12,7 @@
         <ng-container id="defaultFields" class="row" *ngFor="let field of defaultFields; let i = index">
             <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onDefaultSelection($event.target.id)" />
             <span class="field">{{field?.text}}</span>
-            <span class="field">{{field?.id}}</span>
+            <span class="field id">{{field?.id}}</span>
             <span class="field">{{field?.value}}</span>
         </ng-container>
     </div>
@@ -25,7 +25,7 @@
         <ng-container id="extraFields" class="row" *ngFor="let field of extraFields; let i = index">
             <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onExtraSelection($event.target.id)" />
             <span class="field">{{field?.text}}</span>
-            <span class="field">{{field?.id}}</span>
+            <span class="field id">{{field?.id}}</span>
             <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
         </ng-container>
     </div>
@@ -47,7 +47,7 @@
         <ng-container id="userFields" class="row" *ngFor="let field of userFields; let i = index">
             <input class="field cb" type="checkbox" [id]="field.name" [checked]="field.selected" (change)="onUserSelection($event.target.id)" />
             <span class="field">{{field?.text}}</span>
-            <span class="field">{{field?.id}}</span>
+            <span class="field id">{{field?.id}}</span>
             <input type="text" [id]="field?.name" [value]="field?.value" class="field" (change)="onFieldChange($event.target)" />
             <button class="delete-btn" (click)="onDeleteField(i)">X</button>
         </ng-container>
