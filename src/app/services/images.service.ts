@@ -10,13 +10,25 @@ export class ImagesService {
   images: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   selectedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   reparse: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  jsonOutput: BehaviorSubject<object> = new BehaviorSubject<object>({ data: [] });
+  fieldsInterface: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  jsonOutput: BehaviorSubject<object> = new BehaviorSubject<object>({ data: [], fields: {} });
 
   constructor() { }
 
-  updateImageList(files) {
+  newImageList(files) {
     const rawImages = files;
     const images: FileDetail[] = [];
+    for (let i = 0; i < rawImages.length; i++) {
+      this.imagePreview(rawImages[i]);
+      const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true, previewImage: 'assets/images/image_broken.svg' };
+      images.push(image);
+    }
+    this.images.next(images);
+  }
+
+  addToImageList(files) {
+    const rawImages = files;
+    const images: FileDetail[] = this.images.value;
     for (let i = 0; i < rawImages.length; i++) {
       this.imagePreview(rawImages[i]);
       const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true, previewImage: 'assets/images/image_broken.svg' };
@@ -51,11 +63,12 @@ export class ImagesService {
     this.selectedImages.next(selected);
   }
 
-  updateJsonOutput(fieldsUsed) {
+  updateJsonOutput(fieldsUsed: object, includeFields: boolean) {
     const jsonObjects = this.selectedImages.value.map(image => { return image.objects; });
+    const fieldsJson = includeFields ? { fields: fieldsUsed }: null;
     const jsonObj = {
       data: jsonObjects,
-      fields: fieldsUsed
+      ...fieldsJson
     };
     this.jsonOutput.next(jsonObj);
   }

@@ -73,7 +73,6 @@ export class OpenJsonFileComponent implements OnInit {
   }
 
   private selectedFields(keys: string[]) {
-    console.log(keys);
     const defaultFields = this.fieldService.defaultFields.getValue().map(field => { field.selected = false; return field });
     const extraFields = this.fieldService.extraFields.getValue().map(field => { field.selected = false; return field });
     this.fieldService.userFields.next([]);

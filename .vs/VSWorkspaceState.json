@@ -1,6 +1,15 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\pages",
+    "\\src\\app\\pages\\settings",
+    "\\src\\app\\services",
+    "\\src\\app\\shared",
+    "\\src\\app\\shared\\enums",
+    "\\src\\app\\shared\\interfaces"
   ],
+  "SelectedNode": "\\src\\app\\services\\images.service.ts",
   "PreviewInSolutionExplorer": false
 }

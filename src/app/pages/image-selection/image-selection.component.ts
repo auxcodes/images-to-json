@@ -12,6 +12,8 @@ export class ImageSelectionComponent implements OnInit {
 
   allFiles: FileDetail[] = [];
   selectedFiles: FileDetail[] = [];
+  filesSelected = false;
+  private addMore = false; 
 
   @ViewChild('ImageSelectInputDialog', { static: false }) fileSelectDialog: ElementRef;
 
@@ -23,6 +25,7 @@ export class ImageSelectionComponent implements OnInit {
   ngOnInit() {
     this.imageService.images.subscribe(files => {
       this.allFiles = files;
+      this.filesSelected = files.length > 0;
     });
     this.imageService.selectedImages.subscribe(files => {
       this.selectedFiles = files;
@@ -33,16 +36,22 @@ export class ImageSelectionComponent implements OnInit {
     this.imageService.reparse.subscribe(reparseAll => this.refreshParsing(reparseAll));
   }
 
-  onOpenFileDialog() {
+  onOpenFileDialog(addMore: boolean) {
+    this.addMore = addMore;
     const e: HTMLElement = this.fileSelectDialog.nativeElement;
     e.click();
   }
 
   onFileSelected(event) {
-    this.imageService.updateImageList(event.target.files);
+    if (this.addMore) {
+      this.imageService.addToImageList(event.target.files);
+    }
+    else {
+      this.imageService.newImageList(event.target.files);
+    }
     this.imageService.images.next(this.parseImages(this.allFiles));
     this.imageService.updateSelectedImages();
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage());
+    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 
   onImageChecked(imageId) {
@@ -66,7 +75,7 @@ export class ImageSelectionComponent implements OnInit {
         this.imageService.images.next(this.parseImages(this.selectedFiles));
       }
       this.selectedFiles = this.parseImages(this.selectedFiles);
-      this.imageService.updateJsonOutput(this.fieldService.updateStorage());
+      this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     }
   }
 }

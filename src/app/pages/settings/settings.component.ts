@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FileManagerService } from 'src/app/services/file-manager.service';
-import { FileDetail } from 'src/app/shared/interfaces/file-detail';
 import { ImagesService } from '../../services/images.service';
 import { FieldsService } from '../../services/fields.service';
 
@@ -12,6 +11,7 @@ import { FieldsService } from '../../services/fields.service';
 export class SettingsComponent implements OnInit {
 
   jsonOutput: object = {};
+  includeFieldsInterface = true;
 
   indexed = false;
   dataKey = false;
@@ -25,6 +25,10 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.imageService.fieldsInterface.subscribe(checked => {
+      this.includeFieldsInterface = checked;
+      this.imageService.updateJsonOutput(this.fieldService.updateStorage(), checked);
+    });
   }
 
   onRefreshParsing(reparseAll) {
@@ -46,10 +50,15 @@ export class SettingsComponent implements OnInit {
     };
   }
 
+  onIncludeInterface(checked) {
+    console.log('include fields', checked);
+    this.imageService.fieldsInterface.next(checked);
+  }
+
   onOutputPreviewChange(target) {
     this.indexed = target === 'indexJson' ? !this.indexed : this.indexed;
     this.dataKey = target === 'dataKeyJson' ? !this.dataKey : this.dataKey;
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage());
+    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.includeFieldsInterface);
   }
 
   onSaveFile() {
