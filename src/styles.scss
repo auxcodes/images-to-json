@@ -1,4 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+$btn-color: #fff;
+$btn-hover-color: #eee;
+$btn-active-color: #ddd;
+
 body{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
@@ -19,14 +23,36 @@ body{
 
   h2 {
     margin-bottom: 5px;
+    margin-right: auto;
   }
 
   button {
     margin-top: 10px;
-    margin-left: auto;
     margin-bottom: 5px;
     border-radius: 0 30px 0 0;
     padding-right: 15px;
     cursor: pointer;
+  }
+
+  button {
+    background-color: $btn-color;
+    border: 1px solid #d2d2d2;
+    font-size: 1em;
+    transition: background-color .15s;
+
+    &:hover {
+      text-decoration: underline;
+      background-color: $btn-hover-color;
+    }
+
+    &:active {
+      background-color: $btn-active-color;
+    }
+
+    &:disabled {
+      box-shadow: none;
+      text-decoration: none;
+      cursor: default;
+    }
   }
 }

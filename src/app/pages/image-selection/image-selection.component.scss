@@ -5,19 +5,25 @@
   .images-header {
     display: flex;
 
-    .open-btn {
-      margin: auto 0 auto 0;
+    .reset-btn {
+      margin-left: 5px;
     }
-  }
 
-  .browse-btn {
-    border-radius: 0;
-    padding-right: revert;
-    margin: 0 5px 0 0;
-  }
+    .select-btn {
+      border-radius: 0;
+      margin-left: 5px;
+      padding-right: revert;
+    }
 
-  .browse-input {
-    display: none;
+    .addmore-btn {
+      border-radius: 0;
+      margin-left: 0;
+      padding-right: revert;
+    }
+
+    .browse-input {
+      display: none;
+    }
   }
 
   .selected-files {
