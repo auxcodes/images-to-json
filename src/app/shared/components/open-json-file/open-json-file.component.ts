@@ -6,6 +6,7 @@ import { ImageFile } from '../../interfaces/image-file';
 import { FieldsService } from '../../../services/fields.service';
 import { JsonField } from '../../interfaces/json-field';
 import { FieldType } from '../../enums/field-type.enum';
+import { StoredFields } from '../../interfaces/stored-fields';
 
 @Component({
   selector: 'app-open-json-file',
@@ -14,10 +15,10 @@ import { FieldType } from '../../enums/field-type.enum';
 })
 export class OpenJsonFileComponent implements OnInit {
 
-  private jsonObjects: object[] = [];
+  private jsonObjects: object = null;
   private fieldKeys: string[] = [];
 
-  @ViewChild('FileSelectInputDialog', {static: false}) fileSelectDialog: ElementRef;
+  @ViewChild('FileSelectInputDialog', { static: false }) fileSelectDialog: ElementRef;
 
   constructor(
     private fileService: FileManagerService,
@@ -26,11 +27,21 @@ export class OpenJsonFileComponent implements OnInit {
 
   ngOnInit() {
     this.fileService.jsonFile.subscribe(file => {
-      this.jsonObjects = Object.values(file)[0];
-      if (this.jsonObjects) {
-        this.selectedFields(Object.keys(this.jsonObjects[0]));
-        this.imageService.jsonOutput.next(this.jsonObjects);
-        this.imageService.images.next(this.imageFiles(this.jsonObjects));
+      if (Object.values(file)[0]) {
+        let fieldsJson: object = Object.values(file)[1] ? { fields: Object.values(file)[1] } : null;
+        const imagesJson = Object.values(file)[0] ? { data: Object.values(file)[0] } : { data: [] };
+        this.jsonObjects = {
+          ...imagesJson,
+          ...fieldsJson
+        }
+        if (this.jsonObjects) {
+          if (!fieldsJson) {
+            fieldsJson = this.selectedFields(imagesJson.data);
+          }
+          this.fieldService.setAllFields(fieldsJson['fields']);
+          this.imageService.jsonOutput.next(this.jsonObjects);
+          this.imageService.images.next(this.imageFiles(imagesJson.data));
+        }
       }
     });
   }
@@ -56,7 +67,7 @@ export class OpenJsonFileComponent implements OnInit {
       const imageFile: ImageFile = {
         name: obj['name'] ? obj['name'] : 'unknown',
         size: obj['size'] ? obj['size'] : -1,
-        lastModified: obj['lastModified'] ? obj['lastModified']: (new Date()).getTime(),
+        lastModified: obj['lastModified'] ? obj['lastModified'] : (new Date()).getTime(),
         type: obj['type']
       }
       const fileDetail: FileDetail = {
@@ -72,7 +83,7 @@ export class OpenJsonFileComponent implements OnInit {
     return result;
   }
 
-  private selectedFields(keys: string[]) {
+  private selectedFields(keys: string[]): object {
     const defaultFields = this.fieldService.defaultFields.getValue().map(field => { field.selected = false; return field });
     const extraFields = this.fieldService.extraFields.getValue().map(field => { field.selected = false; return field });
     this.fieldService.userFields.next([]);
@@ -96,9 +107,19 @@ export class OpenJsonFileComponent implements OnInit {
       }
     });
 
-    this.fieldService.defaultFields.next(defaultFields);
-    this.fieldService.extraFields.next(extraFields);
-    this.fieldService.userFields.next(userFields);
+    return {
+      fields: {
+        defaultFields: defaultFields,
+        extraFields: extraFields,
+        userFields: userFields
+      }
+    };
+  }
+
+  private setFields(fields: object) {
+    this.fieldService.defaultFields.next(fields['default']);
+    this.fieldService.extraFields.next(fields['extra']);
+    this.fieldService.userFields.next(fields['userFields']);
   }
 
   private findKey(fields: JsonField[], key: string): number {
@@ -106,7 +127,7 @@ export class OpenJsonFileComponent implements OnInit {
   }
 
   private addUserField(key: string): JsonField {
-      return { name: key, value: '', selected: true, id: '$' + key, type: FieldType.string, text: this.fieldNameToText(key) };
+    return { name: key, value: '', selected: true, id: '$' + key, type: FieldType.string, text: this.fieldNameToText(key) };
   }
 
   private fieldNameToText(fieldName: string): string {

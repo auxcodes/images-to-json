@@ -21,11 +21,15 @@ export class SettingsComponent implements OnInit {
     private fieldService: FieldsService,
     private fileService: FileManagerService
   ) {
-    imageService.jsonOutput.subscribe(data => this.jsonOutput = data);
+    imageService.jsonOutput.subscribe(data => {
+      console.log(data);
+      this.jsonOutput = data;
+    });
   }
 
   ngOnInit() {
     this.imageService.fieldsInterface.subscribe(checked => {
+      console.log('fields checked:', checked);
       this.includeFieldsInterface = checked;
       this.imageService.updateJsonOutput(this.fieldService.updateStorage(), checked);
     });
@@ -42,6 +46,7 @@ export class SettingsComponent implements OnInit {
   set code(jsonString) {
     try {
       if (jsonString) {
+        console.log('set code', jsonString);
         this.imageService.jsonOutput.next(JSON.parse(jsonString));
       }
     }
@@ -51,7 +56,6 @@ export class SettingsComponent implements OnInit {
   }
 
   onIncludeInterface(checked) {
-    console.log('include fields', checked);
     this.imageService.fieldsInterface.next(checked);
   }
 

@@ -64,19 +64,21 @@ export class ImagesService {
   }
 
   updateJsonOutput(fieldsUsed: object, includeFields: boolean) {
+    console.log(fieldsUsed, includeFields);
     const jsonObjects = this.selectedImages.value.map(image => { return image.objects; });
-    const fieldsJson = includeFields ? { fields: fieldsUsed }: null;
+    const fieldsJson = includeFields ? { fields: fieldsUsed } : { fields: {} };
     const jsonObj = {
       data: jsonObjects,
       ...fieldsJson
     };
+    console.log('update output', jsonObj);
     this.jsonOutput.next(jsonObj);
   }
 
   resetImages() {
     this.images.next([]);
     this.selectedImages.next([]);
-    this.jsonOutput.next({ data: []});
+    this.jsonOutput.next({ data: [], fields: {} });
   }
 
 }
