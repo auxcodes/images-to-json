@@ -61,6 +61,7 @@ export class ImageSelectionComponent implements OnInit {
 
   onImagesReset() {
     this.imageService.resetImages();
+    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 
   parseImages(images: FileDetail[]) {
