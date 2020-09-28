@@ -1,0 +1,13 @@
+<section class="output-section">
+    <div class="section-header output-header">
+        <h2>Output</h2>
+        <label class="include-fields-label" for="includeInterface">Fields Interface</label>
+        <input class="include-fields-cb" type="checkbox" [id]="includeInterface" [checked]="includeFieldsInterface" (change)="onIncludeInterface($event.target.checked)" />
+        <app-open-json-file class="open-btn"></app-open-json-file>
+        <button class="save-btn" (click)="onSaveFile()">Save</button>
+    </div>
+    <h3>Output Editor</h3>
+    <ace-editor class="output-editor" [(text)]="code" mode="json"></ace-editor>
+    <h3>Json Viewer</h3>
+    <ngx-json-viewer class="json-viewer" [json]="jsonOutput" [expanded]="false"></ngx-json-viewer>
+</section>

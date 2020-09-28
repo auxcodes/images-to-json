@@ -1,0 +1,38 @@
+.output-section {
+  .output-header {
+    display: flex;
+
+    .include-fields-label {
+      margin: auto 5px 3px 0;
+    }
+
+    .include-fields-cb {
+      margin: auto 12px 6px 0;
+    }
+
+    .open-btn {
+      display: flex;
+      margin: 10px 0 5px 0;
+    }
+
+    .save-btn {
+      margin-left: 0;
+    }
+  }
+
+  .output-editor {
+    height: 50vh;
+    width: 550px;
+  }
+
+  .output {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .json-viewer {
+    .ngx-json-viewer {
+      height: auto;
+    }
+  }
+}

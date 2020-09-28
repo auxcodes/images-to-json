@@ -4,11 +4,11 @@ import { ImagesService } from '../../services/images.service';
 import { FieldsService } from '../../services/fields.service';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  selector: 'app-json-output',
+  templateUrl: './json-output.component.html',
+  styleUrls: ['./json-output.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class JsonOutputComponent implements OnInit {
 
   jsonOutput: object = {};
   includeFieldsInterface = true;
@@ -31,10 +31,6 @@ export class SettingsComponent implements OnInit {
       this.includeFieldsInterface = checked;
       this.imageService.updateJsonOutput(this.fieldService.updateStorage(), checked);
     });
-  }
-
-  onRefreshParsing(reparseAll) {
-    this.imageService.reparse.next(reparseAll);
   }
 
   get code() {
@@ -70,4 +66,5 @@ export class SettingsComponent implements OnInit {
       alert('No images selected!');
     }
   }
+
 }
