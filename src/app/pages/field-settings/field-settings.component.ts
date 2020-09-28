@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { JsonField } from 'src/app/shared/interfaces/json-field';
 import { FieldsService } from '../../services/fields.service';
 import { FieldType } from '../../shared/enums/field-type.enum';
+import { ImagesService } from '../../services/images.service';
 
 @Component({
   selector: 'app-field-settings',
@@ -18,10 +19,9 @@ export class FieldSettingsComponent implements OnInit {
   allSelectedExtra = false;
   allSelectedUser = false;
 
-  @Output() fieldChanged = new EventEmitter<boolean>();
-
   constructor(
-    private fieldService: FieldsService
+    private fieldService: FieldsService,
+    private imageService: ImagesService
   ) {
 
   }
@@ -46,7 +46,7 @@ export class FieldSettingsComponent implements OnInit {
   }
 
   private refreshParsing(parseAllImages: boolean) {
-    this.fieldChanged.emit(parseAllImages);
+    this.imageService.reparse.next(parseAllImages);
   }
 
   onFieldChange(field) {
