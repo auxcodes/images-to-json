@@ -8,10 +8,24 @@
     </div>
     <h3>Image Selection</h3>
     <div class="selected-files">
+        <ng-container *ngIf="allFiles.length === 0">
+            <div id="defaultImages" class="default-image" *ngFor="let image of defaultImages; let i = index">
+                <input type="checkbox" [id]="i" [checked]="false" />
+                <label [for]="i">
+                    <img class="preview" [src]="image?.imagePreview" [alt]="image?.fileName" />
+                </label>
+            </div>
+        </ng-container>
         <div id="imageList" class="image-preview" *ngFor="let image of allFiles; let i = index">
             <input type="checkbox" [id]="i" [checked]="image.selected" (change)="onImageChecked($event.target.id)" />
             <label [for]="i">
                 <img class="preview" [src]="image?.previewImage" [alt]="image?.file.name" />
+            </label>
+        </div>
+        <div id="addMore" class="addmore-image">
+            <button id="addmoreImage" (click)="onOpenFileDialog(true)">Add More</button>
+            <label for="addmoreImage">
+                <img class="preview" src="assets/images/image_default.svg" alt="Add images" />
             </label>
         </div>
     </div>

@@ -12,6 +12,9 @@ export class ImageSelectionComponent implements OnInit {
 
   allFiles: FileDetail[] = [];
   selectedFiles: FileDetail[] = [];
+  defaultImages: object[] = [
+    { imagePreview: 'assets/images/image_default.svg', fileName: 'imae_default.svg' },
+    { imagePreview: 'assets/images/image_default.svg', fileName: 'imae_default.svg' }]
   filesSelected = false;
   private addMore = false; 
 
