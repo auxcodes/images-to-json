@@ -78,14 +78,13 @@ export class ImageSelectionComponent implements OnInit {
 
   onDragOver(event) {
     event.currentTarget.style.background = "#f1f1f1";
-    event.currentTarget.style.border = "1px solid #e1e1e1";
     event.stopPropagation();
     event.preventDefault();
   }
 
   onDragLeave(event) {
     event.currentTarget.style.background = "none";
-    event.currentTarget.style.border = "none";
+    event.currentTarget.style.border = "3px dotted #e1e1e1";
   }
 
   parseImages(images: FileDetail[]) {
