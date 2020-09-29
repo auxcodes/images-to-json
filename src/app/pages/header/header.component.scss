@@ -1,0 +1,40 @@
+.header-section {
+  display: flex;
+  height: 75px;
+  border-bottom: 1px solid #c6c6c6;
+  margin-bottom: 20px;
+  box-shadow: 6px 9px 7px -6px rgba(0,0,0,0.2);
+
+  h1 {
+    margin: auto 30px auto 20px;
+    padding: 12px 20px 12px 0;
+    border-right: 2px solid #666;
+    width: max-content;
+    font-size: 2em;
+  }
+
+  .description {
+    margin: auto auto auto 0;
+
+    p {
+      margin: 5px 0 0 0;
+      width: max-content;
+    }
+
+    span {
+        font-size: 1.25em;
+        font-weight: 700;
+    }
+  }
+
+  .github-link {
+    display: flex;
+
+    .octicon {
+      height: 35px;
+      width: 35px;
+      margin: 10px 10px 10px auto;
+      fill: currentColor;
+    }
+  }
+}
