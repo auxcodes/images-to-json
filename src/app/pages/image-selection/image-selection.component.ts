@@ -67,6 +67,27 @@ export class ImageSelectionComponent implements OnInit {
     this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 
+  onDrop(event) {
+    this.addMore = true;
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    const data = { target: { files: files } } ;
+    this.onFileSelected(data);
+    this.onDragLeave(event);
+  }
+
+  onDragOver(event) {
+    event.currentTarget.style.background = "#f1f1f1";
+    event.currentTarget.style.border = "1px solid #e1e1e1";
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  onDragLeave(event) {
+    event.currentTarget.style.background = "none";
+    event.currentTarget.style.border = "none";
+  }
+
   parseImages(images: FileDetail[]) {
     let result: FileDetail[] = this.fieldService.updateIdValues(images);
     result = this.fieldService.parseSelectedFields(result);
