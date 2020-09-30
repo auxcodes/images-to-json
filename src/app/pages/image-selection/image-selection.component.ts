@@ -112,7 +112,7 @@ export class ImageSelectionComponent implements OnInit {
   refreshParsing(parseAllImages: boolean) {
     if (this.selectedFiles.length > 0) {
       if (parseAllImages) {
-        this.imageService.images.next(this.parseImages(this.selectedFiles));
+        this.imageService.images.next(this.parseImages(this.allFiles));
       }
       this.selectedFiles = this.parseImages(this.selectedFiles);
       this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
