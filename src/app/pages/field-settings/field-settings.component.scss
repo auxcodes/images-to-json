@@ -21,7 +21,6 @@ $btn-active-color: #ddd;
         margin: 2px;
       }
 
-
       button {
         margin: 1px;
         border-radius: 0;
@@ -89,6 +88,28 @@ $btn-active-color: #ddd;
     }
 
     .delete-btn {
+      margin: 1px;
+      border-radius: 0;
+      cursor: pointer;
+      background-color: $btn-color;
+      border: 1px solid #d2d2d2;
+      font-size: 1em;
+      transition: background-color .15s;
+
+      &:hover {
+        text-decoration: underline;
+        background-color: $btn-hover-color;
+      }
+
+      &:active {
+        background-color: $btn-active-color;
+      }
+
+      &:disabled {
+        box-shadow: none;
+        text-decoration: none;
+        cursor: default;
+      }
     }
   }
 }
