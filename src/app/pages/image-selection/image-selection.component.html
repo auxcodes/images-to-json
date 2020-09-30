@@ -7,7 +7,7 @@
         <input class="browse-input" id="file-selector" #ImageSelectInputDialog type="file" accept="image/*" (change)="onFileSelected($event)" multiple />
     </div>
     <h3>Image Selection</h3>
-    <div class="selected-files">
+    <div class="selected-files" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
         <ng-container *ngIf="allFiles.length === 0">
             <div id="defaultImages" class="default-image" *ngFor="let image of defaultImages; let i = index">
                 <input type="checkbox" [id]="i" [checked]="false" />
