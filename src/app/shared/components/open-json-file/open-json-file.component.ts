@@ -6,7 +6,7 @@ import { ImageFile } from '../../interfaces/image-file';
 import { FieldsService } from '../../../services/fields.service';
 import { JsonField } from '../../interfaces/json-field';
 import { FieldType } from '../../enums/field-type.enum';
-import { StoredFields } from '../../interfaces/stored-fields';
+
 
 @Component({
   selector: 'app-open-json-file',
@@ -16,7 +16,6 @@ import { StoredFields } from '../../interfaces/stored-fields';
 export class OpenJsonFileComponent implements OnInit {
 
   private jsonObjects: object = null;
-  private fieldKeys: string[] = [];
 
   @ViewChild('FileSelectInputDialog', { static: false }) fileSelectDialog: ElementRef;
 
@@ -41,6 +40,7 @@ export class OpenJsonFileComponent implements OnInit {
           this.fieldService.setAllFields(fieldsJson['fields']);
           this.imageService.jsonOutput.next(this.jsonObjects);
           this.imageService.images.next(this.imageFiles(imagesJson.data));
+          this.imageService.selectedImages.next(this.imageFiles(imagesJson.data));
         }
       }
     });
@@ -66,9 +66,9 @@ export class OpenJsonFileComponent implements OnInit {
     jsonObjects.forEach(obj => {
       const imageFile: ImageFile = {
         name: obj['name'] ? obj['name'] : 'unknown',
-        size: obj['size'] ? obj['size'] : -1,
+        size: obj['size'] ? obj['size'] : 0,
         lastModified: obj['lastModified'] ? obj['lastModified'] : (new Date()).getTime(),
-        type: obj['type']
+        type: obj['type'] ? obj['type'] : 'image/unknown'
       }
       const fileDetail: FileDetail = {
         file: imageFile,
@@ -114,12 +114,6 @@ export class OpenJsonFileComponent implements OnInit {
         userFields: userFields
       }
     };
-  }
-
-  private setFields(fields: object) {
-    this.fieldService.defaultFields.next(fields['default']);
-    this.fieldService.extraFields.next(fields['extra']);
-    this.fieldService.userFields.next(fields['userFields']);
   }
 
   private findKey(fields: JsonField[], key: string): number {
