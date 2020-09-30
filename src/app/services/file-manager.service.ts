@@ -14,7 +14,7 @@ export class FileManagerService {
 
   saveToFile(contents) {
     const fileContent = contents;
-    const filename = 'Images2json' + '_' + this.fileDate() + '.json';
+    const filename = 'ImagesTojson' + '_' + this.fileDate() + '.json';
     const blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
     saveAs(blob, filename);
   }

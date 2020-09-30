@@ -31,7 +31,7 @@ export class ImagesService {
     const images: FileDetail[] = this.images.value;
     for (let i = 0; i < rawImages.length; i++) {
       this.imagePreview(rawImages[i]);
-      const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true, previewImage: 'assets/images/image_broken.svg' };
+      const image: FileDetail = { file: rawImages[i], objects: {}, idValues: [], selected: true, previewImage: 'assets/images/image_default.svg' };
       images.push(image);
     }
     this.images.next(images);
@@ -40,7 +40,7 @@ export class ImagesService {
   private imagePreview(file) {
     const reader = new FileReader();
     reader.onload = () => {
-      this.updateImagePreviews(file.name, reader.result.toString());
+      this.updateImagePreviews(file.name, file.type.match('image/*') ? reader.result.toString() : 'assets/images/image_broken.svg');
     }
     reader.readAsDataURL(file);
   }

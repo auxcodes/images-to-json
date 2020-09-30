@@ -16,11 +16,12 @@
                 </label>
             </div>
         </ng-container>
-        <div id="imageList" class="image-preview" *ngFor="let image of allFiles; let i = index">
+        <div id="imageList" class="image-preview" *ngFor="let image of allFiles; let i = index" >
             <input type="checkbox" [id]="i" [checked]="image.selected" (change)="onImageChecked($event.target.id)" />
-            <label [for]="i">
-                <img class="preview" [src]="image?.previewImage" [alt]="image?.file.name" />
+            <label [for]="i" >
+                <img class="preview" [src]="image?.previewImage" [alt]="image?.file.name"/>
             </label>
+            <p>{{image?.file.name}}</p>
         </div>
         <div id="addMore" class="addmore-image">
             <button id="addmoreImage" (click)="onOpenFileDialog(true)">Add More</button>

@@ -70,10 +70,26 @@ export class ImageSelectionComponent implements OnInit {
   onDrop(event) {
     this.addMore = true;
     event.preventDefault();
-    const files = event.dataTransfer.files;
+    const files = this.fileTypeCheck(event.dataTransfer.files);
     const data = { target: { files: files } } ;
     this.onFileSelected(data);
     this.onDragLeave(event);
+  }
+
+  private fileTypeCheck(files) {
+    const count = files.length;
+    const filterFiles = [];
+    for (let i = 0; i < count; i++) {
+      if (files[i].type.match('image/*')) {
+        filterFiles.push(files[i]);
+      }
+      else {
+        if (confirm(files[i].name + ' is not an image file! \n\n - OK to include \n - Cancel to skip')) {
+          filterFiles.push(files[i]);
+        }
+      }
+    }
+    return filterFiles;
   }
 
   onDragOver(event) {

@@ -75,7 +75,7 @@ export class OpenJsonFileComponent implements OnInit {
         objects: obj,
         idValues: {},
         selected: true,
-        previewImage: 'assets/images/image_broken.svg'
+        previewImage: 'assets/images/image_default.svg'
       }
       result.push(fileDetail);
     });
