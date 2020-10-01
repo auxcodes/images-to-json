@@ -1,4 +1,7 @@
-# images-to-json
+# [images-to-json](https://imagestojson.aux.codes)
+
+![Site Preview](https://github.com/auxcodes/images-to-json/blob/master/img/ImagesToJsonSitePreview.png)
+
 Website for creating a JSON file for images in a given directory
 - Generate a JSON file for images 
 - Create custom fields
