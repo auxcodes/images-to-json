@@ -1,14 +1,17 @@
 # [images-to-json](https://imagestojson.aux.codes)
 
+Website for creating/updating JSON files for a selection of images.
+
 ![Site Preview](https://github.com/auxcodes/images-to-json/blob/master/img/ImagesToJsonSitePreview.png)
 
-Website for creating a JSON file for images in a given directory
 - Generate a JSON file for images 
 - Create custom fields
 - Reference values from other fields via their 'Id'
 - Add to existing JSON
 - Generates custom fields from existing JSON 
 - Save fields interface to your JSON
+
+## Local Setup
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.0.
 
