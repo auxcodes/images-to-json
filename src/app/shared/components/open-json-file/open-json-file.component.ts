@@ -27,15 +27,15 @@ export class OpenJsonFileComponent implements OnInit {
   ngOnInit() {
     this.fileService.jsonFile.subscribe(file => {
       if (Object.values(file)[0]) {
-        let fieldsJson: object = Object.values(file)[1] ? { fields: Object.values(file)[1] } : null;
-        const imagesJson = Object.values(file)[0] ? { data: Object.values(file)[0] } : { data: [] };
+        let fieldsJson: object = (Object.keys(file)[1] && Object.keys(file)[1] === 'fields') ? { fields: Object.values(file)[1] } : null;
+        const imagesJson = Object.keys(file)[0] === 'data' ? { data: Object.values(file)[0] } : { data: [] };
         this.jsonObjects = {
           ...imagesJson,
           ...fieldsJson
         }
         if (this.jsonObjects) {
           if (!fieldsJson) {
-            fieldsJson = this.selectedFields(imagesJson.data);
+            fieldsJson = this.selectedFields(Object.keys(imagesJson.data[0]));
           }
           this.fieldService.setAllFields(fieldsJson['fields']);
           this.imageService.jsonOutput.next(this.jsonObjects);

@@ -59,7 +59,7 @@ export class JsonOutputComponent implements OnInit {
   }
 
   onSaveFile() {
-    if (this.imageService.selectedImages.value.length > 0) {
+    if (this.imageService.selectedImages.value.length > 0 || this.includeFieldsInterface) {
       this.fileService.saveToFile(this.jsonOutput);
     }
     else {

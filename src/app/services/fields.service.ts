@@ -25,8 +25,8 @@ export class FieldsService {
     this.resetFields();
   }
 
-  checkStorage() {
-    this.storageService.readJSONEntry(this.storageKey).then(storage => {
+  async checkStorage() {
+    await this.storageService.readJSONEntry(this.storageKey).then(storage => {
       if (storage) {
         this.setAllFields(storage);
       }
@@ -56,6 +56,7 @@ export class FieldsService {
   }
 
   setAllFields(fields: StoredFields) {
+    console.log(fields);
     this.defaultFields.next(fields.defaultFields);
     this.extraFields.next(fields.extraFields);
     this.userFields.next(fields.userFields);
