@@ -1,8 +1,9 @@
-# [images-to-json](https://imagestojson.aux.codes)
-
-Website for creating/updating JSON files for a selection of images.
+# images-to-json
+[https://imagestojson.aux.codes](https://imagestojson.aux.codes)
 
 ![Site Preview](https://github.com/auxcodes/images-to-json/blob/master/img/ImagesToJsonSitePreview.png)
+
+Website for creating/updating JSON files for a selection of images.
 
 - Generate a JSON file for images 
 - Create custom fields
