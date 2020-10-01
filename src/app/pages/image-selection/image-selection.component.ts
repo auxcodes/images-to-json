@@ -100,7 +100,7 @@ export class ImageSelectionComponent implements OnInit {
 
   onDragLeave(event) {
     event.currentTarget.style.background = "none";
-    event.currentTarget.style.border = "3px dotted #e1e1e1";
+    event.currentTarget.style.border = "3px dashed #e1e1e1";
   }
 
   parseImages(images: FileDetail[]) {

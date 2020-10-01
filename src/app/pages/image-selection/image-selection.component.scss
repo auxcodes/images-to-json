@@ -36,6 +36,35 @@
     .image-preview {
       margin: 5px;
       padding: 0 5px 0 5px;
+      position: relative;
+      transition-duration: 0.3s;
+
+      &:hover {
+        box-shadow: 6px 9px 7px -6px rgba(0,0,0,0.7);
+      }
+
+      &:before {
+        display: block;
+        position: absolute;
+        content: attr(image-name);
+        background: #0087ff;
+        color: #fff;
+        transform: scaleY(0);
+        opacity: 0;
+        padding: 10px;
+        border-radius: 0 15px 0 0;
+        box-shadow: 6px 9px 7px -6px rgba(0,0,0,0.7);
+        bottom: -25px;
+        left: 5px;
+        z-index: 2;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+      }
+
+      &:hover:before {
+        transform: scaleY(1);
+        opacity: 1;
+      }
 
       p {
         margin: 0 auto;
