@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FileManagerService } from 'src/app/services/file-manager.service';
 import { ImagesService } from '../../services/images.service';
 import { FieldsService } from '../../services/fields.service';
+import { JsonService } from '../../services/json.service';
 
 @Component({
   selector: 'app-json-output',
@@ -19,9 +20,10 @@ export class JsonOutputComponent implements OnInit {
   constructor(
     private imageService: ImagesService,
     private fieldService: FieldsService,
-    private fileService: FileManagerService
+    private fileService: FileManagerService,
+    private jsonService: JsonService
   ) {
-    imageService.jsonOutput.subscribe(data => {
+    jsonService.outputJson.subscribe(data => {
       this.jsonOutput = data;
     });
   }
@@ -29,7 +31,7 @@ export class JsonOutputComponent implements OnInit {
   ngOnInit() {
     this.imageService.fieldsInterface.subscribe(checked => {
       this.includeFieldsInterface = checked;
-      this.imageService.updateJsonOutput(this.fieldService.updateStorage(), checked);
+      this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), checked);
     });
   }
 
@@ -40,7 +42,7 @@ export class JsonOutputComponent implements OnInit {
   set code(jsonString) {
     try {
       if (jsonString) {
-        this.imageService.jsonOutput.next(JSON.parse(jsonString));
+        this.jsonService.outputJson.next(JSON.parse(jsonString));
       }
     }
     catch (e) {
@@ -55,7 +57,7 @@ export class JsonOutputComponent implements OnInit {
   onOutputPreviewChange(target) {
     this.indexed = target === 'indexJson' ? !this.indexed : this.indexed;
     this.dataKey = target === 'dataKeyJson' ? !this.dataKey : this.dataKey;
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.includeFieldsInterface);
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.includeFieldsInterface);
   }
 
   onSaveFile() {

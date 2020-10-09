@@ -56,7 +56,6 @@ export class FieldsService {
   }
 
   setAllFields(fields: StoredFields) {
-    console.log(fields);
     this.defaultFields.next(fields.defaultFields);
     this.extraFields.next(fields.extraFields);
     this.userFields.next(fields.userFields);

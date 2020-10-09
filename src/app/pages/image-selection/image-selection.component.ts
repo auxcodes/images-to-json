@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import { ImagesService } from '../../services/images.service';
 import { FileDetail } from '../../shared/interfaces/file-detail';
 import { FieldsService } from '../../services/fields.service';
+import { JsonService } from '../../services/json.service';
 
 @Component({
   selector: 'app-image-selection',
@@ -22,12 +23,14 @@ export class ImageSelectionComponent implements OnInit {
 
   constructor(
     private imageService: ImagesService,
-    private fieldService: FieldsService) {
+    private fieldService: FieldsService,
+    private jsonService: JsonService) {
   }
 
   ngOnInit() {
     this.imageService.images.subscribe(files => {
       this.allFiles = files;
+      console.log(files.length > 0 ? files[0].file : 'not files yet');
       this.filesSelected = files.length > 0;
     });
     this.imageService.selectedImages.subscribe(files => {
@@ -54,7 +57,7 @@ export class ImageSelectionComponent implements OnInit {
     }
     this.imageService.images.next(this.parseImages(this.allFiles));
     this.imageService.updateSelectedImages();
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 
   onImageChecked(imageId) {
@@ -64,7 +67,7 @@ export class ImageSelectionComponent implements OnInit {
 
   onImagesReset() {
     this.imageService.resetImages();
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 
   onDrop(event) {
@@ -115,7 +118,7 @@ export class ImageSelectionComponent implements OnInit {
         this.imageService.images.next(this.parseImages(this.allFiles));
       }
       this.selectedFiles = this.parseImages(this.selectedFiles);
-      this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+      this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     }
   }
 }

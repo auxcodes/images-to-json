@@ -3,6 +3,7 @@ import { JsonField } from 'src/app/shared/interfaces/json-field';
 import { FieldsService } from '../../services/fields.service';
 import { FieldType } from '../../shared/enums/field-type.enum';
 import { ImagesService } from '../../services/images.service';
+import { JsonService } from '../../services/json.service';
 
 @Component({
   selector: 'app-field-settings',
@@ -21,7 +22,8 @@ export class FieldSettingsComponent implements OnInit {
 
   constructor(
     private fieldService: FieldsService,
-    private imageService: ImagesService
+    private imageService: ImagesService,
+    private jsonService: JsonService
   ) {
 
   }
@@ -29,7 +31,7 @@ export class FieldSettingsComponent implements OnInit {
   ngOnInit() {
     this.fieldService.checkStorage().then(() => {
       this.subscribeToFields();
-      this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+      this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     });    
   }
 
@@ -72,7 +74,7 @@ export class FieldSettingsComponent implements OnInit {
         break;
       }
     }
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 
   onDefaultSelection(fieldName) {
@@ -85,14 +87,14 @@ export class FieldSettingsComponent implements OnInit {
   onExtraSelection(fieldName) {
     const index = this.extraFields.findIndex(field => field.name === fieldName);
     this.extraFields[index].selected = !this.extraFields[index].selected;
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     this.refreshParsing(false);
   }
 
   onUserSelection(fieldName) {
     const index = this.userFields.findIndex(field => field.name === fieldName);
     this.userFields[index].selected = !this.userFields[index].selected;
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     this.refreshParsing(false);
   }
 
@@ -115,7 +117,7 @@ export class FieldSettingsComponent implements OnInit {
       }
     }
     this.refreshParsing(false);
-    this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 
   onAddField(event) {
@@ -131,7 +133,7 @@ export class FieldSettingsComponent implements OnInit {
       const newField: JsonField = { name: name, value: value, selected: selected, id: '$' + name, type: FieldType.string, text: this.fieldNameToText(name) };
       this.userFields.push(newField);
       this.fieldService.userFields.next(this.userFields);
-      this.imageService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+      this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     }
   }
 

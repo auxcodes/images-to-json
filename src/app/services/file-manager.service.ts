@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
-import { BehaviorSubject } from 'rxjs';
+import { JsonService } from './json.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileManagerService {
 
-  jsonFile: BehaviorSubject<object> = new BehaviorSubject<object>({});
-
-  constructor() { }
+  constructor(private jsonService: JsonService) { }
 
   saveToFile(contents) {
     const fileContent = contents;
@@ -22,7 +20,7 @@ export class FileManagerService {
   openFile(file) {
     const reader = new FileReader();
     reader.onload = () => {
-      this.jsonFile.next(JSON.parse(reader.result.toString()));
+      this.jsonService.loadJson(JSON.parse(reader.result.toString()));
     }
     reader.readAsText(file);
   }
