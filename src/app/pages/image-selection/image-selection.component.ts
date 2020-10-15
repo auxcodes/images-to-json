@@ -14,6 +14,8 @@ export class ImageSelectionComponent implements OnInit {
   allFiles: FileDetail[] = [];
   selectedFiles: FileDetail[] = [];
   importedFiles: FileDetail[] = [];
+  selectedImportedFiles: FileDetail[] = [];
+
 
   defaultImages: object[] = [
     { imagePreview: 'assets/images/image_default.svg', fileName: 'imae_default.svg' },
@@ -42,7 +44,13 @@ export class ImageSelectionComponent implements OnInit {
     });
     this.imageService.importedImages.subscribe(files => {
       this.importedFiles = files;
-      console.log('IS - imported files: ', files);
+    });
+    this.imageService.selectedImportedImages.subscribe(files => {
+      this.selectedImportedFiles = files;
+
+      if (files.length > 0) {
+        this.refreshImportedParsing(false);
+      }
     });
 
     this.imageService.reparse.subscribe(reparseAll => this.refreshParsing(reparseAll));
@@ -71,8 +79,8 @@ export class ImageSelectionComponent implements OnInit {
     this.imageService.updateSelectedImages(this.allFiles);
   }
 
-  onImportedImageChecked(imageId) {
-    this.importedFiles[imageId].selected = !this.importedFiles[imageId].selected;
+  onImportedImageChecked(image) {
+    this.importedFiles[image.value].selected = !this.importedFiles[image.value].selected;
     this.imageService.updateImportedImages(this.importedFiles);
   }
 
@@ -129,6 +137,12 @@ export class ImageSelectionComponent implements OnInit {
         this.imageService.images.next(this.parseImages(this.allFiles));
       }
       this.selectedFiles = this.parseImages(this.selectedFiles);
+      this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    }
+  }
+
+  refreshImportedParsing(parseAllImages: boolean) {
+    if (this.selectedImportedFiles.length > 0) {
       this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     }
   }

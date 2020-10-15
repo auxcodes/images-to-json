@@ -13,9 +13,10 @@ export class JsonService {
   constructor(private imageService: ImagesService) { }
 
   updateJsonOutput(fieldsUsed: object, includeFields: boolean) {
-    const jsonObjects: object[] = this.imageService.selectedImages.value.map(image => { return image.objects; });
+    let jsonObjects: object[] = this.imageService.selectedImages.value.map(image => { return image.objects; });
     if (this.loadedJson.value['data']) {
-      jsonObjects.concat(this.loadedJson.value['data']);
+      const importedObjects: object[] = this.imageService.selectedImportedImages.value.map(image => { return image.objects; });
+      jsonObjects = jsonObjects.concat(importedObjects);
     }
     const fieldsJson = includeFields ? { fields: fieldsUsed } : null;
     const jsonObj = {

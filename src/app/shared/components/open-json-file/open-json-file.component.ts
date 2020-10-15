@@ -29,12 +29,12 @@ export class OpenJsonFileComponent implements OnInit {
 
   ngOnInit() {
     this.jsonService.loadedJson.subscribe(file => {
-      console.log('open-json-file loadedJson sub');
       if (Object.values(file)[0]) {
         let fieldsJson: object = (Object.keys(file)[1] && Object.keys(file)[1] === 'fields') ? { fields: Object.values(file)[1] } : null;
         const imagesJson = Object.keys(file)[0] === 'data' ? { data: Object.values(file)[0] } : { data: [] };
+        const sample = imagesJson.data[0];
         if (!fieldsJson) {
-          this.importedFields = this.repeatingValues(imagesJson.data);
+          this.importedFields = this.repeatingValues(sample);
           fieldsJson = this.selectedFields(imagesJson.data[0]);
         }
         this.jsonObjects = {
@@ -45,9 +45,8 @@ export class OpenJsonFileComponent implements OnInit {
           this.fieldService.setAllFields(fieldsJson['fields']);
           if (imagesJson.data.length > 0) {
             const imageFiles = this.imageFiles(imagesJson.data);
-            //this.imageService.images.next(imageFiles);
-            //this.imageService.selectedImages.next(imageFiles);
             this.imageService.importedImages.next(imageFiles);
+            this.imageService.selectedImportedImages.next(imageFiles);
           }
         }
       }
@@ -91,27 +90,28 @@ export class OpenJsonFileComponent implements OnInit {
     return result;
   }
 
-  private repeatingValues(jsonObjects: object[]): object {
-    const snapshot = jsonObjects.length <= 10 ? jsonObjects : jsonObjects.slice(0, 10);
-    const fields = snapshot[0];
-    const fieldResults = fields;
+  private repeatingValues(fields: object): object {
+    const fieldResults: object = { ...fields };
 
     for (const field in fields) {
       const fieldValue = fields[field];
+
       if (fieldValue.length > 0) {
-        for (const result in fields) {
-          const value = fields[result];
-          if (value.length > 0 && field !== result && !fieldValue.includes('$')) {
+        for (const innerField in fields) {
+          const value = fields[innerField];
+
+          if (value.length > 0 && field !== innerField && !fieldResults[innerField].includes('$')) {
             const index = value.indexOf(fieldValue);
+
             if (index > -1) {
-              fieldResults[result] = value.replace(fieldValue, '$' + field);
+              fieldResults[innerField] = value.replace(fieldValue, '$' + field);
             }
           }
         }
       }
     }
     // check for $name value
-    Object.entries(fields).find(entry => {
+    Object.entries(fieldResults).find(entry => {
       if (/(jpg|gif|png|webp|tiff|svg)$/.test(entry[1])) {
         fieldResults[entry[0]] = '$name';
       }
@@ -123,6 +123,7 @@ export class OpenJsonFileComponent implements OnInit {
         fieldResults[field] = fieldValue.replace(fieldValue, '');
       }
     }
+
     return fieldResults;
   }
 

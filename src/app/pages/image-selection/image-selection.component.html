@@ -10,8 +10,8 @@
     <div class="image-files selected-files" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
         <ng-container *ngIf="allFiles.length === 0">
             <div id="defaultImages" class="default-image" *ngFor="let image of defaultImages; let i = index">
-                <input type="checkbox" [id]="i" [checked]="false" />
-                <label [for]="i">
+                <input type="checkbox" [id]="'dummy' + i" [checked]="false" />
+                <label [for]="'dummy' + i">
                     <img class="preview" [src]="image?.imagePreview" [alt]="image?.fileName" />
                 </label>
             </div>
@@ -33,8 +33,8 @@
     <h3 *ngIf="importedFiles.length > 0">From JSON</h3>
     <div class="image-files imported-files" *ngIf="importedFiles.length > 0">
         <div id="importedImageList" class="image-preview" *ngFor="let importedImage of importedFiles; let i = index" [attr.image-name]="importedImage ? importedImage?.file.name : 'Loading...'">
-            <input type="checkbox" [id]="i" [checked]="importedImage.selected" (change)="onImportedImageChecked($event.target.id)" />
-            <label [for]="i">
+            <input type="checkbox" [id]="'import' + i" [value]="i" [checked]="importedImage.selected" (change)="onImportedImageChecked($event.target)" />
+            <label [for]="'import' + i">
                 <img class="preview" [src]="importedImage?.previewImage" [alt]="importedImage?.file.name" />
             </label>
             <p>{{importedImage?.file.name}}</p>

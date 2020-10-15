@@ -81,6 +81,8 @@ export class ImagesService {
   resetImages() {
     this.images.next([]);
     this.selectedImages.next([]);
+    this.importedImages.next([]);
+    this.selectedImportedImages.next([]);
   }
 
 }
