@@ -23,12 +23,10 @@ export class JsonService {
       data: jsonObjects,
       ...fieldsJson
     };
-    //console.log(jsonObj);
     this.outputJson.next(jsonObj);
   }
 
   loadJson(jsonFileContent: object) {
-    //this.outputJson.next(jsonFileContent);
     this.loadedJson.next(jsonFileContent);
   }
 }

@@ -17,6 +17,7 @@ import { JsonService } from '../../../services/json.service';
 export class OpenJsonFileComponent implements OnInit {
 
   private jsonObjects: object = null;
+  private importedFields: object = null;
 
   @ViewChild('FileSelectInputDialog', { static: false }) fileSelectDialog: ElementRef;
 
@@ -32,17 +33,17 @@ export class OpenJsonFileComponent implements OnInit {
       if (Object.values(file)[0]) {
         let fieldsJson: object = (Object.keys(file)[1] && Object.keys(file)[1] === 'fields') ? { fields: Object.values(file)[1] } : null;
         const imagesJson = Object.keys(file)[0] === 'data' ? { data: Object.values(file)[0] } : { data: [] };
+        if (!fieldsJson) {
+          this.importedFields = this.repeatingValues(imagesJson.data);
+          fieldsJson = this.selectedFields(imagesJson.data[0]);
+        }
         this.jsonObjects = {
           ...imagesJson,
           ...fieldsJson
         }
         if (this.jsonObjects) {
-          if (!fieldsJson) {
-            fieldsJson = this.selectedFields(imagesJson.data[0]);
-          }
           this.fieldService.setAllFields(fieldsJson['fields']);
           if (imagesJson.data.length > 0) {
-            this.repeatingValues(imagesJson.data);
             this.imageService.images.next(this.imageFiles(imagesJson.data));
             this.imageService.selectedImages.next(this.imageFiles(imagesJson.data));
           }
@@ -88,29 +89,18 @@ export class OpenJsonFileComponent implements OnInit {
     return result;
   }
 
-  private valueIdParse() {
-    // find value in other values
-    // use key for that value as id in othe values
-    // output: id and which values contain it
-  }
-
-  private repeatingValues(jsonObjects: object[]) {
+  private repeatingValues(jsonObjects: object[]): object {
     const snapshot = jsonObjects.length <= 10 ? jsonObjects : jsonObjects.slice(0, 10);
-    console.log(snapshot[0]);
-    const objZero = Object.entries(snapshot[0]);
-    let results: object[] = objZero;
-
     const fields = snapshot[0];
     const fieldResults = fields;
+
     for (const field in fields) {
       const fieldValue = fields[field];
-      console.log('<in:', field, fieldValue);
       if (fieldValue.length > 0) {
-        for (const result in fieldResults) {
-          const value = fieldResults[result];
-          if (field !== result && value.length > 0) {
+        for (const result in fields) {
+          const value = fields[result];
+          if (value.length > 0 && field !== result && !fieldValue.includes('$')) {
             const index = value.indexOf(fieldValue);
-            console.log('index', index, field !== result);
             if (index > -1) {
               fieldResults[result] = value.replace(fieldValue, '$' + field);
             }
@@ -118,41 +108,28 @@ export class OpenJsonFileComponent implements OnInit {
         }
       }
     }
-    console.log('==< field results', fieldResults);
-
-    objZero.forEach(obj => {
-      const objKey = obj[0].toString();
-      const objValue = obj[1].toString();
-      if (objValue.length > 0) {
-        const temp: object[] = [];
-        results.forEach(entry => {
-          const key: string = entry[0].toString();
-          const value: string = entry[1].toString();
-          if (key.localeCompare(objKey) !== 0 && value.length > 0) {
-            const index = value.indexOf(objValue);
-            if (index > -1) {
-              temp.push([ key, value.replace(objValue, '$' + objKey)]);
-            }
-            else {
-              temp.push([ key, value ]);
-            }
-          }
-          else {
-            temp.push([ key, value ]);
-          }
-        });
-        results = temp;
+    // check for $name value
+    Object.entries(fields).find(entry => {
+      if (/(jpg|gif|png|webp|tiff|svg)$/.test(entry[1])) {
+        fieldResults[entry[0]] = '$name';
       }
     });
-    console.log('=== results: ', results);
+    // remove values without id's
+    for (const field in fieldResults) {
+      const fieldValue = fieldResults[field];
+      if (fieldValue.length > 0 && !fieldValue.includes('$')) {
+        fieldResults[field] = fieldValue.replace(fieldValue, '');
+      }
+    }
+    return fieldResults;
   }
 
   private findName(jsonObject: object) {
     let result = 'unknown';
     Object.values(jsonObject).find(value => {
-        if (/(jpg|gif|png|webp|tiff|svg)$/.test(value)) {
-          result = value.split(/[\\\/]/).pop();
-        }
+      if (/(jpg|gif|png|webp|tiff|svg)$/.test(value)) {
+        result = value.split(/[\\\/]/).pop();
+      }
     });
     return result;
   }
@@ -207,7 +184,7 @@ export class OpenJsonFileComponent implements OnInit {
 
   private addUserField(field: object): JsonField {
     const key = field['key'];
-    return { name: key, value: '', selected: true, id: '$' + key, type: FieldType.string, text: this.fieldNameToText(key) };
+    return { name: key, value: this.addValue(key), selected: true, id: '$' + key, type: FieldType.string, text: this.fieldNameToText(key) };
   }
 
   private fieldNameToText(fieldName: string): string {
@@ -216,7 +193,7 @@ export class OpenJsonFileComponent implements OnInit {
     return result;
   }
 
-  private addValue() {
-
+  private addValue(key: string): string {
+    return this.importedFields[key] ? this.importedFields[key] : '';
   }
 }
