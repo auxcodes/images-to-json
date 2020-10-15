@@ -44,8 +44,10 @@ export class OpenJsonFileComponent implements OnInit {
         if (this.jsonObjects) {
           this.fieldService.setAllFields(fieldsJson['fields']);
           if (imagesJson.data.length > 0) {
-            this.imageService.images.next(this.imageFiles(imagesJson.data));
-            this.imageService.selectedImages.next(this.imageFiles(imagesJson.data));
+            const imageFiles = this.imageFiles(imagesJson.data);
+            //this.imageService.images.next(imageFiles);
+            //this.imageService.selectedImages.next(imageFiles);
+            this.imageService.importedImages.next(imageFiles);
           }
         }
       }

@@ -15,7 +15,6 @@ export class JsonService {
   updateJsonOutput(fieldsUsed: object, includeFields: boolean) {
     const jsonObjects: object[] = this.imageService.selectedImages.value.map(image => { return image.objects; });
     if (this.loadedJson.value['data']) {
-      console.log(this.loadedJson.value['data']);
       jsonObjects.concat(this.loadedJson.value['data']);
     }
     const fieldsJson = includeFields ? { fields: fieldsUsed } : null;

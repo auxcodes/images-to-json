@@ -13,6 +13,8 @@ export class ImageSelectionComponent implements OnInit {
 
   allFiles: FileDetail[] = [];
   selectedFiles: FileDetail[] = [];
+  importedFiles: FileDetail[] = [];
+
   defaultImages: object[] = [
     { imagePreview: 'assets/images/image_default.svg', fileName: 'imae_default.svg' },
     { imagePreview: 'assets/images/image_default.svg', fileName: 'imae_default.svg' }]
@@ -30,7 +32,6 @@ export class ImageSelectionComponent implements OnInit {
   ngOnInit() {
     this.imageService.images.subscribe(files => {
       this.allFiles = files;
-      console.log(files.length > 0 ? files[0].file : 'not files yet');
       this.filesSelected = files.length > 0;
     });
     this.imageService.selectedImages.subscribe(files => {
@@ -39,6 +40,11 @@ export class ImageSelectionComponent implements OnInit {
         this.refreshParsing(false);
       }
     });
+    this.imageService.importedImages.subscribe(files => {
+      this.importedFiles = files;
+      console.log('IS - imported files: ', files);
+    });
+
     this.imageService.reparse.subscribe(reparseAll => this.refreshParsing(reparseAll));
   }
 
@@ -63,6 +69,11 @@ export class ImageSelectionComponent implements OnInit {
   onImageChecked(imageId) {
     this.allFiles[imageId].selected = !this.allFiles[imageId].selected;
     this.imageService.updateSelectedImages(this.allFiles);
+  }
+
+  onImportedImageChecked(imageId) {
+    this.importedFiles[imageId].selected = !this.importedFiles[imageId].selected;
+    this.imageService.updateImportedImages(this.importedFiles);
   }
 
   onImagesReset() {

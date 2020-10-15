@@ -7,7 +7,7 @@
         <input class="browse-input" id="file-selector" #ImageSelectInputDialog type="file" accept="image/*" (change)="onFileSelected($event)" multiple />
     </div>
     <h3>Image Selection</h3>
-    <div class="selected-files" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
+    <div class="image-files selected-files" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
         <ng-container *ngIf="allFiles.length === 0">
             <div id="defaultImages" class="default-image" *ngFor="let image of defaultImages; let i = index">
                 <input type="checkbox" [id]="i" [checked]="false" />
@@ -18,8 +18,8 @@
         </ng-container>
         <div id="imageList" class="image-preview" *ngFor="let image of allFiles; let i = index" [attr.image-name]="image ? image?.file.name : 'Loading...'">
             <input type="checkbox" [id]="i" [checked]="image.selected" (change)="onImageChecked($event.target.id)" />
-            <label [for]="i" >
-                <img class="preview" [src]="image?.previewImage" [alt]="image?.file.name"/>
+            <label [for]="i">
+                <img class="preview" [src]="image?.previewImage" [alt]="image?.file.name" />
             </label>
             <p>{{image?.file.name}}</p>
         </div>
@@ -30,4 +30,15 @@
             </label>
         </div>
     </div>
+    <h3 *ngIf="importedFiles.length > 0">From JSON</h3>
+    <div class="image-files imported-files" *ngIf="importedFiles.length > 0">
+        <div id="importedImageList" class="image-preview" *ngFor="let importedImage of importedFiles; let i = index" [attr.image-name]="importedImage ? importedImage?.file.name : 'Loading...'">
+            <input type="checkbox" [id]="i" [checked]="importedImage.selected" (change)="onImportedImageChecked($event.target.id)" />
+            <label [for]="i">
+                <img class="preview" [src]="importedImage?.previewImage" [alt]="importedImage?.file.name" />
+            </label>
+            <p>{{importedImage?.file.name}}</p>
+        </div>
+    </div>
+
 </section>

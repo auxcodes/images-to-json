@@ -27,9 +27,16 @@
   }
 
   .selected-files {
+    border: 3px dashed #e1e1e1;
+  }
+
+  .imported-files {
+    border: 1px solid #e1e1e1;
+  }
+
+  .image-files {
     display: grid;
     grid-template-columns: repeat(3, 123px);
-    border: 3px dashed #e1e1e1;
     margin: auto;
     padding: 15px 10px;
 
@@ -142,6 +149,8 @@
         }
       }
     }
+
+
 
     .default-image {
       margin: 5px;

@@ -9,6 +9,8 @@ export class ImagesService {
 
   images: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   selectedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
+  importedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
+  selectedImportedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   reparse: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   fieldsInterface: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
@@ -60,6 +62,20 @@ export class ImagesService {
       }
     });
     this.selectedImages.next(selected);
+  }
+
+  updateImportedImages(updatedList?: FileDetail[]) {
+    if (updatedList) {
+      this.importedImages.next(updatedList);
+    }
+
+    const selected: FileDetail[] = [];
+    this.importedImages.value.forEach(image => {
+      if (image.selected) {
+        selected.push(image);
+      }
+    });
+    this.selectedImportedImages.next(selected);
   }
 
   resetImages() {
