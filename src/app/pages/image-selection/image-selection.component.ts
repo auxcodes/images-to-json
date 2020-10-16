@@ -38,19 +38,14 @@ export class ImageSelectionComponent implements OnInit {
     });
     this.imageService.selectedImages.subscribe(files => {
       this.selectedFiles = files;
-      if (files.length > 0) {
-        this.refreshParsing(false);
-      }
+      this.refreshParsing(false);
     });
     this.imageService.importedImages.subscribe(files => {
       this.importedFiles = files;
     });
     this.imageService.selectedImportedImages.subscribe(files => {
       this.selectedImportedFiles = files;
-
-      if (files.length > 0) {
-        this.refreshImportedParsing(false);
-      }
+      this.refreshImportedParsing(false);
     });
 
     this.imageService.reparse.subscribe(reparseAll => this.refreshParsing(reparseAll));
@@ -137,13 +132,18 @@ export class ImageSelectionComponent implements OnInit {
         this.imageService.images.next(this.parseImages(this.allFiles));
       }
       this.selectedFiles = this.parseImages(this.selectedFiles);
-      this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
     }
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+    
   }
 
   refreshImportedParsing(parseAllImages: boolean) {
     if (this.selectedImportedFiles.length > 0) {
-      this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
+      if (parseAllImages) {
+        //this.imageService.images.next(this.parseImages(this.allFiles));
+      }
+      //this.selectedFiles = this.parseImages(this.selectedFiles);
     }
+    this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
   }
 }
