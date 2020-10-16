@@ -166,6 +166,9 @@ export class OpenJsonFileComponent implements OnInit {
       if (index !== -1) {
         extraFields[index].selected = true;
         addToUser = false;
+        if (key === 'id') {
+          this.fieldService.updateIdReference(this.findMaxId() + 1);
+        }
       }
       if (addToUser) {
         userFields.push(this.addUserField({ key: key, value: fieldsObj[key] }));
@@ -179,6 +182,15 @@ export class OpenJsonFileComponent implements OnInit {
         userFields: userFields
       }
     };
+  }
+
+  private findMaxId(): number {
+    let result = 1;
+
+    const objects = this.jsonService.loadedJson.value['data'];
+    result = objects.reduce((a, b) => a.id > b.id ? a : b).id;
+
+    return result;
   }
 
   private findKey(fields: JsonField[], key: string): number {
