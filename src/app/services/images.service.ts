@@ -51,7 +51,6 @@ export class ImagesService {
   }
 
   updateSelectedImages(updatedList?: FileDetail[]) {
-    console.log('Image Service: ', updatedList);
     if (updatedList) {
       this.images.next(updatedList);
     }

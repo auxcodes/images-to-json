@@ -14,7 +14,6 @@ export class JsonService {
 
   updateJsonOutput(fieldsUsed: object, includeFields: boolean) {
     let jsonObjects: object[] = this.imageService.selectedImages.value.map(image => { return image.objects; });
-    console.log('JSON Service: ',jsonObjects);
     if (this.loadedJson.value['data']) {
       const importedObjects: object[] = this.imageService.selectedImportedImages.value.map(image => { return image.objects; });
       jsonObjects = jsonObjects.concat(importedObjects);
@@ -30,4 +29,5 @@ export class JsonService {
   loadJson(jsonFileContent: object) {
     this.loadedJson.next(jsonFileContent);
   }
+
 }
