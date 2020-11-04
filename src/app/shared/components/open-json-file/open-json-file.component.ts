@@ -35,6 +35,7 @@ export class OpenJsonFileComponent implements OnInit {
         const sample = imagesJson.data[0];
         if (!fieldsJson) {
           this.importedFields = this.repeatingValues(sample);
+          this.fieldService.importedFields = this.importedFields;
           fieldsJson = this.selectedFields(imagesJson.data[0]);
         }
         this.jsonObjects = {

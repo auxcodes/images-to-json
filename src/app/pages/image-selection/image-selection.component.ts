@@ -48,7 +48,10 @@ export class ImageSelectionComponent implements OnInit {
       this.refreshImportedParsing(false);
     });
 
-    this.imageService.reparse.subscribe(reparseAll => this.refreshParsing(reparseAll));
+    this.imageService.reparse.subscribe(reparseAll => {
+      this.refreshParsing(reparseAll);
+      this.refreshImportedParsing(reparseAll);
+    });
   }
 
   onOpenFileDialog(addMore: boolean) {
@@ -126,6 +129,32 @@ export class ImageSelectionComponent implements OnInit {
     return result;
   }
 
+  parseImportedImages(images: FileDetail[]) {
+
+    //console.log('before: ', images[0])
+    const result: FileDetail[] = this.fieldService.updateIdValues(images);
+    console.log(this.fieldService.compareImportedFields());
+    //console.log('middle: ', images[0])
+    //const parsed = images;//this.fieldService.parseSelectedFields(images);
+    //console.log('after: ', images[0])
+    //// loop through updated images
+    //result.forEach(resultImage => {
+    //  const image = images.find(img => resultImage === img);
+    //  const parsedImage = parsed.find(img => resultImage === img);
+    //  console.log('image:> ', image)
+    //  // loop through parsed images objects
+    //  for (let obj in parsedImage.objects) {
+    //    console.log(parsedImage.objects[obj], '<-->', image.objects[obj], '<-->', resultImage.objects[obj]);
+    //  }
+    //});
+    // - loop through fields
+    // -- check if field matches previous version
+    // -- if doesn't exist keep
+    // -- if doesn't match keep old
+
+    return result;
+  }
+
   refreshParsing(parseAllImages: boolean) {
     if (this.selectedFiles.length > 0) {
       if (parseAllImages) {
@@ -139,6 +168,7 @@ export class ImageSelectionComponent implements OnInit {
 
   refreshImportedParsing(parseAllImages: boolean) {
     if (this.selectedImportedFiles.length > 0) {
+      this.parseImportedImages(this.importedFiles);
       if (parseAllImages) {
         //this.imageService.images.next(this.parseImages(this.allFiles));
       }

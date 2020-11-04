@@ -21,6 +21,8 @@ export class FieldsService {
   extraFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
   userFields: BehaviorSubject<JsonField[]> = new BehaviorSubject<JsonField[]>([]);
 
+  importedFields: object = null;
+
   constructor(private storageService: LocalStorageService) {
     this.resetFields();
   }
@@ -264,6 +266,25 @@ export class FieldsService {
         result = result.replace(field.id, value);
       });
     }
+    return result;
+  }
+
+  compareImportedFields(): object {
+    const allFields: JsonField[] = this.defaultFields.value.concat(this.extraFields.value, this.userFields.value);
+    const result = Object.assign(this.importedFields);
+
+    allFields.forEach(field => {
+      const key = field.name;
+      if (field.selected && !(key in result)) {
+        console.log('New field:', key, result[key]);
+        result[key] = field.value;
+      }
+      if (!field.selected && (key in result)) {
+        console.error('Remove field:', key);
+
+        delete result[key];
+      }
+    });
     return result;
   }
 }
