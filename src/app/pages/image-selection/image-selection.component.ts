@@ -21,7 +21,7 @@ export class ImageSelectionComponent implements OnInit {
     { imagePreview: 'assets/images/image_default.svg', fileName: 'imae_default.svg' },
     { imagePreview: 'assets/images/image_default.svg', fileName: 'imae_default.svg' }]
   filesSelected = false;
-  private addMore = false; 
+  private addMore = false;
 
   @ViewChild('ImageSelectInputDialog', { static: false }) fileSelectDialog: ElementRef;
 
@@ -48,7 +48,7 @@ export class ImageSelectionComponent implements OnInit {
       this.refreshImportedParsing(false);
     });
 
-    this.imageService.reparse.subscribe(reparseAll => {
+    this.imageService.reparseTrigger.subscribe(reparseAll => {
       this.refreshParsing(reparseAll);
       this.refreshImportedParsing(reparseAll);
     });
@@ -91,7 +91,7 @@ export class ImageSelectionComponent implements OnInit {
     this.addMore = true;
     event.preventDefault();
     const files = this.fileTypeCheck(event.dataTransfer.files);
-    const data = { target: { files: files } } ;
+    const data = { target: { files: files } };
     this.onFileSelected(data);
     this.onDragLeave(event);
   }
@@ -130,27 +130,23 @@ export class ImageSelectionComponent implements OnInit {
   }
 
   parseImportedImages(images: FileDetail[]) {
-
-    //console.log('before: ', images[0])
     const result: FileDetail[] = this.fieldService.updateIdValues(images);
-    console.log(this.fieldService.compareImportedFields());
-    //console.log('middle: ', images[0])
-    //const parsed = images;//this.fieldService.parseSelectedFields(images);
-    //console.log('after: ', images[0])
-    //// loop through updated images
-    //result.forEach(resultImage => {
-    //  const image = images.find(img => resultImage === img);
-    //  const parsedImage = parsed.find(img => resultImage === img);
-    //  console.log('image:> ', image)
-    //  // loop through parsed images objects
-    //  for (let obj in parsedImage.objects) {
-    //    console.log(parsedImage.objects[obj], '<-->', image.objects[obj], '<-->', resultImage.objects[obj]);
-    //  }
-    //});
-    // - loop through fields
-    // -- check if field matches previous version
-    // -- if doesn't exist keep
-    // -- if doesn't match keep old
+    const updateFields = this.fieldService.compareImportedFields();
+
+    result.forEach(resultImage => {
+      // add fields
+      for (const field in updateFields.add) {
+        resultImage.objects[field] = resultImage.idValues['$' + field];
+      }
+      // remove fields
+      updateFields.remove.forEach(key => {
+        delete resultImage.objects[key];
+      });
+    });
+
+    if (updateFields.add['id']) {
+      this.fieldService.updateIdReference(this.jsonService.loadedDataMaxId() + 1);
+    }
 
     return result;
   }
@@ -163,7 +159,7 @@ export class ImageSelectionComponent implements OnInit {
       this.selectedFiles = this.parseImages(this.selectedFiles);
     }
     this.jsonService.updateJsonOutput(this.fieldService.updateStorage(), this.imageService.fieldsInterface.value);
-    
+
   }
 
   refreshImportedParsing(parseAllImages: boolean) {

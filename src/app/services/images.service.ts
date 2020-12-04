@@ -11,7 +11,7 @@ export class ImagesService {
   selectedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   importedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
   selectedImportedImages: BehaviorSubject<FileDetail[]> = new BehaviorSubject<FileDetail[]>([]);
-  reparse: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  reparseTrigger: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   fieldsInterface: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   constructor() { }

@@ -50,7 +50,7 @@ export class FieldSettingsComponent implements OnInit {
   }
 
   private refreshParsing(parseAllImages: boolean) {
-    this.imageService.reparse.next(parseAllImages);
+    this.imageService.reparseTrigger.next(parseAllImages);
   }
 
   onFieldChange(field) {

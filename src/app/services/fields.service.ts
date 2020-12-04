@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { FileDetail } from '../shared/interfaces/file-detail';
 import { LocalStorageService } from './local-storage.service';
 import { StoredFields } from '../shared/interfaces/stored-fields';
+import { FieldsUpdate } from '../shared/interfaces/fields-update';
 
 @Injectable({
   providedIn: 'root'
@@ -250,9 +251,10 @@ export class FieldsService {
     return result;
   }
 
-  private getInputValue(content: string, image: FileDetail): string {
+  getInputValue(content: string, image: FileDetail): string {
     let result = content;
-    if (content.includes('$')) {
+    content = content.toString();
+    if (content && content.includes('$')) {
       this.defaultFields.value.forEach(field => {
         const value = image.idValues[field.id] ? image.idValues[field.id] : this.tempFieldValues[field.id];
         result = result.replace(field.id, value);
@@ -269,22 +271,25 @@ export class FieldsService {
     return result;
   }
 
-  compareImportedFields(): object {
+  compareImportedFields(): FieldsUpdate {
     const allFields: JsonField[] = this.defaultFields.value.concat(this.extraFields.value, this.userFields.value);
-    const result = Object.assign(this.importedFields);
+    const result = {
+      add: {},
+      remove: []
+    }
 
     allFields.forEach(field => {
       const key = field.name;
-      if (field.selected && !(key in result)) {
-        console.log('New field:', key, result[key]);
-        result[key] = field.value;
+      if (field.selected && !(key in this.importedFields)) {
+        this.importedFields[key] = field.value;
+        result.add[key] = field.value;
       }
-      if (!field.selected && (key in result)) {
-        console.error('Remove field:', key);
-
-        delete result[key];
+      if (!field.selected && (key in this.importedFields)) {
+        delete this.importedFields[key];
+        result.remove.push(key);
       }
     });
+
     return result;
   }
 }
